@@ -29,6 +29,7 @@ from botocore.exceptions import (
 from botocore.utils import SSOTokenFetcher, SSOTokenFetcherAuth
 from botocore.utils import original_ld_library_path
 
+from awscli import __version__ as awscli_version
 from awscli.customizations.assumerole import CACHE_DIR as AWS_CREDS_CACHE_DIR
 from awscli.customizations.commands import BasicCommand
 from awscli.customizations.exceptions import ConfigurationError
@@ -253,6 +254,10 @@ class OAuthCallbackHandler(BaseHTTPRequestHandler):
         # Suppress built-in logging, otherwise it prints
         # each request to console
         pass
+
+    def version_string(self):
+        # Override the Host header in case helpful for debugging
+        return f'AWS CLI/{awscli_version}'
 
     def do_GET(self):
         self.send_response(200)
