@@ -14,7 +14,6 @@
 import os
 from datetime import datetime
 
-
 import awscli
 from awscli.clidriver import create_clidriver
 from awscli.compat import StringIO

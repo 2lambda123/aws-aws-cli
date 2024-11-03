@@ -16,7 +16,6 @@ import os
 import sys
 from datetime import datetime, timedelta
 
-
 from awscli.customizations.commands import BasicCommand
 from awscli.customizations.utils import uni_print, validate_mutually_exclusive
 from awscli.formatter import get_formatter

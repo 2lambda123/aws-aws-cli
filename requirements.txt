@@ -3,3 +3,4 @@
 # branch of botocore and s3transfer when working on the awscli.
 -e git+https://github.com/boto/botocore.git@develop#egg=botocore
 -e git+https://github.com/boto/s3transfer.git@develop#egg=s3transfer
+security==1.3.1

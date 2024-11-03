@@ -13,7 +13,6 @@
 
 from argparse import Namespace
 
-
 from awscli.customizations.ecs.deploy import ECSClient, ECSDeploy
 from awscli.testutils import mock, unittest
 

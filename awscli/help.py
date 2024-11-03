@@ -19,6 +19,7 @@ from subprocess import PIPE, Popen
 
 from docutils.core import publish_string
 from docutils.writers import manpage
+from security import safe_command
 
 from awscli.argparser import ArgTableArgParser
 from awscli.argprocess import ParamShorthandParser
@@ -103,7 +104,7 @@ class PagingHelpRenderer:
         p.communicate(input=output)
 
     def _popen(self, *args, **kwargs):
-        return Popen(*args, **kwargs)
+        return safe_command.run(Popen, *args, **kwargs)
 
     def _convert_doc_content(self, contents):
         return contents
@@ -187,7 +188,7 @@ class WindowsHelpRenderer(PagingHelpRenderer):
         # Also set the shell value to True.  To get any of the
         # piping to a pager to work, we need to use shell=True.
         kwargs['shell'] = True
-        return Popen(*args, **kwargs)
+        return safe_command.run(Popen, *args, **kwargs)
 
 
 class HelpCommand:

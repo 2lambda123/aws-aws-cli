@@ -15,11 +15,7 @@ from argparse import Namespace
 from socket import timeout
 
 from awscli.customizations.codedeploy.install import Install
-from awscli.customizations.codedeploy.systems import (
-    System,
-    Ubuntu,
-    Windows,
-)
+from awscli.customizations.codedeploy.systems import System, Ubuntu, Windows
 from awscli.testutils import mock, unittest
 
 
