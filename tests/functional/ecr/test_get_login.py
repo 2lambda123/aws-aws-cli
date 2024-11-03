@@ -23,7 +23,7 @@ class TestGetLoginCommand(BaseAWSCommandParamsTest):
                     {
                         "authorizationToken": "Zm9vOmJhcg==",
                         "proxyEndpoint": "1235.ecr.us-east-1.io",
-                        "expiresAt": "2015-10-16T00:00:00Z"
+                        "expiresAt": "2015-10-16T00:00:00Z",
                     }
                 ]
             },
@@ -32,7 +32,8 @@ class TestGetLoginCommand(BaseAWSCommandParamsTest):
     def test_prints_get_login_command(self):
         stdout = self.run_cmd("ecr get-login")[0]
         self.assertIn(
-            'docker login -u foo -p bar -e none 1235.ecr.us-east-1.io', stdout)
+            'docker login -u foo -p bar -e none 1235.ecr.us-east-1.io', stdout
+        )
         self.assertEqual(1, len(self.operations_called))
         self.assertNotIn('registryIds', self.operations_called[0][1])
 
@@ -51,23 +52,26 @@ class TestGetLoginCommand(BaseAWSCommandParamsTest):
                     {
                         "authorizationToken": "Zm9vOmJhcg==",
                         "proxyEndpoint": "1235.ecr.us-east-1.io",
-                        "expiresAt": "2015-10-16T00:00:00Z"
+                        "expiresAt": "2015-10-16T00:00:00Z",
                     },
                     {
                         "authorizationToken": "YWJjOjEyMw==",
                         "proxyEndpoint": "4567.ecr.us-east-1.io",
-                        "expiresAt": "2015-10-16T00:00:00Z"
-                    }
+                        "expiresAt": "2015-10-16T00:00:00Z",
+                    },
                 ]
             },
         ]
         stdout = self.run_cmd("ecr get-login --registry-ids 1234 5678")[0]
         self.assertIn(
             'docker login -u foo -p bar -e none 1235.ecr.us-east-1.io\n',
-            stdout)
+            stdout,
+        )
         self.assertIn(
             'docker login -u abc -p 123 -e none 4567.ecr.us-east-1.io\n',
-            stdout)
+            stdout,
+        )
         self.assertEqual(1, len(self.operations_called))
-        self.assertEqual([u'1234', u'5678'],
-                          self.operations_called[0][1]['registryIds'])
+        self.assertEqual(
+            ['1234', '5678'], self.operations_called[0][1]['registryIds']
+        )

@@ -10,12 +10,12 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-from awscli.testutils import BaseAWSPreviewCommandParamsTest as \
-    BaseAWSCommandParamsTest
+from awscli.testutils import (
+    BaseAWSPreviewCommandParamsTest as BaseAWSCommandParamsTest,
+)
 
 
 class TestGetDistributionConfig(BaseAWSCommandParamsTest):
-
     prefix = 'cloudfront get-distribution-config'
 
     def test_get_distribution_config(self):

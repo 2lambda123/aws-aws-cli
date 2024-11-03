@@ -13,23 +13,28 @@
 
 from awscli.customizations.commands import BasicCommand
 from awscli.customizations.servicecatalog import helptext
-from awscli.customizations.servicecatalog.generateproduct \
-    import GenerateProductCommand
-from awscli.customizations.servicecatalog.generateprovisioningartifact \
-    import GenerateProvisioningArtifactCommand
+from awscli.customizations.servicecatalog.generateproduct import (
+    GenerateProductCommand,
+)
+from awscli.customizations.servicecatalog.generateprovisioningartifact import (
+    GenerateProvisioningArtifactCommand,
+)
 
 
 class GenerateCommand(BasicCommand):
     NAME = "generate"
     DESCRIPTION = helptext.GENERATE_COMMAND
     SUBCOMMANDS = [
-        {'name': 'product',
-         'command_class': GenerateProductCommand},
-        {'name': 'provisioning-artifact',
-         'command_class': GenerateProvisioningArtifactCommand}
+        {'name': 'product', 'command_class': GenerateProductCommand},
+        {
+            'name': 'provisioning-artifact',
+            'command_class': GenerateProvisioningArtifactCommand,
+        },
     ]
 
     def _run_main(self, parsed_args, parsed_globals):
         if parsed_args.subcommand is None:
-            raise ValueError("usage: aws [options] <command> <subcommand> "
-                             "[parameters]\naws: error: too few arguments")
+            raise ValueError(
+                "usage: aws [options] <command> <subcommand> "
+                "[parameters]\naws: error: too few arguments"
+            )

@@ -10,8 +10,7 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-from awscli.testutils import BaseAWSCommandParamsTest
-from awscli.testutils import FileCreator
+from awscli.testutils import BaseAWSCommandParamsTest, FileCreator
 
 
 class TestTranslateDocument(BaseAWSCommandParamsTest):
@@ -35,7 +34,10 @@ class TestTranslateDocument(BaseAWSCommandParamsTest):
         cmdline += " --document ContentType=datatype"
         cmdline += " --document-content fileb://%s" % self.temp_file
         result = {
-            "Document": {"Content": self.temp_file_contents, "ContentType": "datatype"},
+            "Document": {
+                "Content": self.temp_file_contents,
+                "ContentType": "datatype",
+            },
             "SourceLanguageCode": "FOO",
             "TargetLanguageCode": "BAR",
         }
@@ -59,7 +61,9 @@ class TestTranslateDocument(BaseAWSCommandParamsTest):
         cmdline += " --document Content=data,ContentType=datatype"
         cmdline += " --document-content fileb://%s" % self.temp_file
 
-        stdout, stderr, rc = self.assert_params_for_cmd(cmdline, expected_rc=255)
+        stdout, stderr, rc = self.assert_params_for_cmd(
+            cmdline, expected_rc=255
+        )
         self.assertIn(
             "Content cannot be provided as a part of the '--document' "
             "argument. Please use the '--document-content' option instead to "

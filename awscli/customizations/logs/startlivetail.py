@@ -10,17 +10,16 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-from functools import partial
-from threading import Thread
 import contextlib
 import signal
 import sys
 import time
+from functools import partial
+from threading import Thread
 
 from awscli.compat import get_stdout_text_writer
 from awscli.customizations.commands import BasicCommand
 from awscli.utils import is_a_tty
-
 
 DESCRIPTION = (
     "Starts a Live Tail streaming session for one or more log groups. "
@@ -201,7 +200,7 @@ class LiveTailLogEventsCollector(Thread):
     def _collect_log_events(self):
         try:
             for event in self._response_stream:
-                if not "sessionUpdate" in event:
+                if "sessionUpdate" not in event:
                     continue
 
                 session_update = event["sessionUpdate"]
@@ -253,9 +252,13 @@ class StartLiveTailCommand(BasicCommand):
         if parsed_args.log_stream_names is not None:
             kwargs["logStreamNames"] = parsed_args.log_stream_names
         if parsed_args.log_stream_name_prefixes is not None:
-            kwargs["logStreamNamePrefixes"] = parsed_args.log_stream_name_prefixes
+            kwargs["logStreamNamePrefixes"] = (
+                parsed_args.log_stream_name_prefixes
+            )
         if parsed_args.log_event_filter_pattern is not None:
-            kwargs["logEventFilterPattern"] = parsed_args.log_event_filter_pattern
+            kwargs["logEventFilterPattern"] = (
+                parsed_args.log_event_filter_pattern
+            )
 
         return kwargs
 
@@ -278,7 +281,11 @@ class StartLiveTailCommand(BasicCommand):
         ui = PrintOnlyUI(self._output, log_events)
 
         log_events_collector = LiveTailLogEventsCollector(
-            self._output, ui, response["responseStream"], log_events, session_metadata
+            self._output,
+            ui,
+            response["responseStream"],
+            log_events,
+            session_metadata,
         )
         log_events_collector.daemon = True
 

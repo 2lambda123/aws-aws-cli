@@ -14,7 +14,6 @@ from awscli.testutils import BaseAWSCommandParamsTest
 
 
 class TestDescribeCachedISCSIVolumes(BaseAWSCommandParamsTest):
-
     PREFIX = 'storagegateway describe-cached-iscsi-volumes'
     VOLUME_ARN = 'a' * 50
 

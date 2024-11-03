@@ -230,9 +230,7 @@ def get_file(prefix, path, mode):
             'fileb:// prefix instead of the file:// prefix.' % file_path
         )
     except OSError as e:
-        raise ResourceLoadingError(
-            f'Unable to load paramfile {path}: {e}'
-        )
+        raise ResourceLoadingError(f'Unable to load paramfile {path}: {e}')
 
 
 def get_uri(prefix, uri):

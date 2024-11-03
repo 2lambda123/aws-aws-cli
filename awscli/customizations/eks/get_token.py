@@ -11,19 +11,15 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 import base64
-import botocore
 import json
 import os
 import sys
-
 from datetime import datetime, timedelta
-from botocore.signers import RequestSigner
-from botocore.model import ServiceId
 
-from awscli.formatter import get_formatter
+
 from awscli.customizations.commands import BasicCommand
-from awscli.customizations.utils import uni_print
-from awscli.customizations.utils import validate_mutually_exclusive
+from awscli.customizations.utils import uni_print, validate_mutually_exclusive
+from awscli.formatter import get_formatter
 
 AUTH_SERVICE = "sts"
 AUTH_COMMAND = "GetCallerIdentity"
@@ -116,15 +112,19 @@ class GetTokenCommand(BasicCommand):
         sts_client = client_factory.get_sts_client(
             region_name=parsed_globals.region, role_arn=parsed_args.role_arn
         )
-        
-        validate_mutually_exclusive(parsed_args, ['cluster_name'], ['cluster_id'])
+
+        validate_mutually_exclusive(
+            parsed_args, ['cluster_name'], ['cluster_id']
+        )
 
         if parsed_args.cluster_id:
             identifier = parsed_args.cluster_id
         elif parsed_args.cluster_name:
             identifier = parsed_args.cluster_name
         else:
-            return ValueError("Either parameter --cluster-name or --cluster-id must be specified.")
+            return ValueError(
+                "Either parameter --cluster-name or --cluster-id must be specified."
+            )
 
         token = TokenGenerator(sts_client).get_token(identifier)
 
@@ -215,7 +215,7 @@ class GetTokenCommand(BasicCommand):
             return fallback_api_version
 
 
-class TokenGenerator(object):
+class TokenGenerator:
     def __init__(self, sts_client):
         self._sts_client = sts_client
 
@@ -236,7 +236,7 @@ class TokenGenerator(object):
         )
 
 
-class STSClientFactory(object):
+class STSClientFactory:
     def __init__(self, session):
         self._session = session
 
@@ -273,4 +273,6 @@ class STSClientFactory(object):
 
     def _inject_k8s_aws_id_header(self, request, **kwargs):
         if K8S_AWS_ID_HEADER in request.context:
-            request.headers[K8S_AWS_ID_HEADER] = request.context[K8S_AWS_ID_HEADER]
+            request.headers[K8S_AWS_ID_HEADER] = request.context[
+                K8S_AWS_ID_HEADER
+            ]

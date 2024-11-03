@@ -14,7 +14,6 @@ from awscli.testutils import BaseAWSCommandParamsTest
 
 
 class TestPutRecordBatch(BaseAWSCommandParamsTest):
-
     prefix = 'firehose put-record-batch'
 
     def test_shorthand(self):
@@ -22,6 +21,6 @@ class TestPutRecordBatch(BaseAWSCommandParamsTest):
         command += ' --records foo bar'
         params = {
             'DeliveryStreamName': 'foo',
-            'Records': [{'Data': 'foo'}, {'Data': 'bar'}]
+            'Records': [{'Data': 'foo'}, {'Data': 'bar'}],
         }
         self.assert_params_for_cmd(command, params)

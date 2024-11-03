@@ -10,32 +10,29 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-import os
 import logging
+import os
 
 from botocore.exceptions import ProfileNotFound
 
 from awscli.compat import compat_input
 from awscli.customizations.commands import BasicCommand
 from awscli.customizations.configure.addmodel import AddModelCommand
-from awscli.customizations.configure.set import ConfigureSetCommand
 from awscli.customizations.configure.get import ConfigureGetCommand
 from awscli.customizations.configure.list import ConfigureListCommand
+from awscli.customizations.configure.set import ConfigureSetCommand
 from awscli.customizations.configure.writer import ConfigFileWriter
 
 from . import mask_value, profile_to_section
-
 
 logger = logging.getLogger(__name__)
 
 
 def register_configure_cmd(cli):
-    cli.register('building-command-table.main',
-                 ConfigureCommand.add_command)
+    cli.register('building-command-table.main', ConfigureCommand.add_command)
 
 
-class InteractivePrompter(object):
-
+class InteractivePrompter:
     def get_value(self, current_value, config_name, prompt_text=''):
         if config_name in ('aws_access_key_id', 'aws_secret_access_key'):
             current_value = mask_value(current_value)
@@ -51,7 +48,7 @@ class InteractivePrompter(object):
 class ConfigureCommand(BasicCommand):
     NAME = 'configure'
     DESCRIPTION = BasicCommand.FROM_FILE()
-    SYNOPSIS = ('aws configure [--profile profile-name]')
+    SYNOPSIS = 'aws configure [--profile profile-name]'
     EXAMPLES = (
         'To create a new configuration::\n'
         '\n'
@@ -73,7 +70,7 @@ class ConfigureCommand(BasicCommand):
         {'name': 'list', 'command_class': ConfigureListCommand},
         {'name': 'get', 'command_class': ConfigureGetCommand},
         {'name': 'set', 'command_class': ConfigureSetCommand},
-        {'name': 'add-model', 'command_class': AddModelCommand}
+        {'name': 'add-model', 'command_class': AddModelCommand},
     ]
 
     # If you want to add new values to prompt, update this list here.
@@ -105,12 +102,14 @@ class ConfigureCommand(BasicCommand):
             config = {}
         for config_name, prompt_text in self.VALUES_TO_PROMPT:
             current_value = config.get(config_name)
-            new_value = self._prompter.get_value(current_value, config_name,
-                                                 prompt_text)
+            new_value = self._prompter.get_value(
+                current_value, config_name, prompt_text
+            )
             if new_value is not None and new_value != current_value:
                 new_values[config_name] = new_value
         config_filename = os.path.expanduser(
-            self._session.get_config_variable('config_file'))
+            self._session.get_config_variable('config_file')
+        )
         if new_values:
             profile = self._session.profile
             self._write_out_creds_file_values(new_values, profile)
@@ -127,15 +126,18 @@ class ConfigureCommand(BasicCommand):
         credential_file_values = {}
         if 'aws_access_key_id' in new_values:
             credential_file_values['aws_access_key_id'] = new_values.pop(
-                'aws_access_key_id')
+                'aws_access_key_id'
+            )
         if 'aws_secret_access_key' in new_values:
             credential_file_values['aws_secret_access_key'] = new_values.pop(
-                'aws_secret_access_key')
+                'aws_secret_access_key'
+            )
         if credential_file_values:
             if profile_name is not None:
                 credential_file_values['__section__'] = profile_name
             shared_credentials_filename = os.path.expanduser(
-                self._session.get_config_variable('credentials_file'))
+                self._session.get_config_variable('credentials_file')
+            )
             self._config_writer.update_config(
-                credential_file_values,
-                shared_credentials_filename)
+                credential_file_values, shared_credentials_filename
+            )

@@ -12,11 +12,9 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 from awscli.testutils import BaseAWSCommandParamsTest
-import awscli.clidriver
 
 
 class TestDescribeLayers(BaseAWSCommandParamsTest):
-
     prefix = 'opsworks describe-layers'
 
     def test_both_params(self):

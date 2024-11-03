@@ -12,13 +12,11 @@
 # language governing permissions and limitations under the License.
 import sys
 
-from awscli.testutils import unittest
-
 from awscli.customizations.s3 import transferconfig
+from awscli.testutils import unittest
 
 
 class TestTransferConfig(unittest.TestCase):
-
     def build_config_with(self, **config_from_user):
         return transferconfig.RuntimeConfig().build_config(**config_from_user)
 
@@ -33,17 +31,23 @@ class TestTransferConfig(unittest.TestCase):
     def test_user_provides_partial_overrides(self):
         config_from_user = {
             'max_concurrent_requests': '20',
-            'multipart_threshold': str(64 * (1024 ** 2)),
+            'multipart_threshold': str(64 * (1024**2)),
         }
         runtime_config = self.build_config_with(**config_from_user)
         # Our overrides were accepted.
-        self.assertEqual(runtime_config['multipart_threshold'],
-                         int(config_from_user['multipart_threshold']))
-        self.assertEqual(runtime_config['max_concurrent_requests'],
-                         int(config_from_user['max_concurrent_requests']))
+        self.assertEqual(
+            runtime_config['multipart_threshold'],
+            int(config_from_user['multipart_threshold']),
+        )
+        self.assertEqual(
+            runtime_config['max_concurrent_requests'],
+            int(config_from_user['max_concurrent_requests']),
+        )
         # And defaults were used for values not specified.
-        self.assertEqual(runtime_config['max_queue_size'],
-                         int(transferconfig.DEFAULTS['max_queue_size']))
+        self.assertEqual(
+            runtime_config['max_queue_size'],
+            int(transferconfig.DEFAULTS['max_queue_size']),
+        )
 
     def test_validates_integer_types(self):
         with self.assertRaises(transferconfig.InvalidConfigError):
@@ -59,16 +63,16 @@ class TestTransferConfig(unittest.TestCase):
 
     def test_human_readable_sizes_converted_to_bytes(self):
         runtime_config = self.build_config_with(multipart_threshold="10MB")
-        self.assertEqual(runtime_config['multipart_threshold'],
-                         10 * 1024 * 1024)
+        self.assertEqual(
+            runtime_config['multipart_threshold'], 10 * 1024 * 1024
+        )
 
     def test_long_value(self):
         # MAXSIZE is the max size of an int on python 2 and the maximum size
         # of Py_ssize_t on python 3, but notably not the maximum size of an
         # int since they are effectively unbounded.
         long_value = sys.maxsize + 1
-        runtime_config = self.build_config_with(
-            multipart_threshold=long_value)
+        runtime_config = self.build_config_with(multipart_threshold=long_value)
         self.assertEqual(runtime_config['multipart_threshold'], long_value)
 
     def test_converts_max_bandwidth_as_string(self):
@@ -99,7 +103,8 @@ class TestConvertToS3TransferConfig(unittest.TestCase):
             'max_in_memory_upload_chunks': 1000,
         }
         result = transferconfig.create_transfer_config_from_runtime_config(
-            runtime_config)
+            runtime_config
+        )
         self.assertEqual(result.multipart_threshold, 1)
         self.assertEqual(result.multipart_chunksize, 2)
         self.assertEqual(result.max_request_concurrency, 3)

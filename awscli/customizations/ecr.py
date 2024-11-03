@@ -10,11 +10,11 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
+import sys
+from base64 import b64decode
+
 from awscli.customizations.commands import BasicCommand
 from awscli.customizations.utils import create_client_from_parsed_globals
-
-from base64 import b64decode
-import sys
 
 
 def register_ecr_commands(cli):
@@ -28,6 +28,7 @@ def _inject_commands(command_table, session, **kwargs):
 
 class ECRLogin(BasicCommand):
     """Log in with 'docker login'"""
+
     NAME = 'get-login'
 
     DESCRIPTION = BasicCommand.FROM_FILE('ecr/get-login_description.rst')
@@ -36,9 +37,9 @@ class ECRLogin(BasicCommand):
         {
             'name': 'registry-ids',
             'help_text': 'A list of AWS account IDs that correspond to the '
-                         'Amazon ECR registries that you want to log in to.',
+            'Amazon ECR registries that you want to log in to.',
             'required': False,
-            'nargs': '+'
+            'nargs': '+',
         },
         {
             'name': 'include-email',
@@ -53,7 +54,8 @@ class ECRLogin(BasicCommand):
                 "and is removed in Docker version 17.06 and later.  You must "
                 "specify --no-include-email if you're using Docker version "
                 "17.06 or later.  The default behavior is to include the "
-                "'-e' flag in the 'docker login' output."),
+                "'-e' flag in the 'docker login' output."
+            ),
         },
         {
             'name': 'no-include-email',
@@ -68,12 +70,14 @@ class ECRLogin(BasicCommand):
 
     def _run_main(self, parsed_args, parsed_globals):
         ecr_client = create_client_from_parsed_globals(
-            self._session, 'ecr', parsed_globals)
+            self._session, 'ecr', parsed_globals
+        )
         if not parsed_args.registry_ids:
             result = ecr_client.get_authorization_token()
         else:
             result = ecr_client.get_authorization_token(
-                registryIds=parsed_args.registry_ids)
+                registryIds=parsed_args.registry_ids
+            )
         for auth in result['authorizationData']:
             auth_token = b64decode(auth['authorizationToken']).decode()
             username, password = auth_token.split(':')
@@ -88,16 +92,17 @@ class ECRLogin(BasicCommand):
 
 class ECRGetLoginPassword(BasicCommand):
     """Get a password to be used with container clients such as Docker"""
+
     NAME = 'get-login-password'
 
     DESCRIPTION = BasicCommand.FROM_FILE(
-            'ecr/get-login-password_description.rst')
+        'ecr/get-login-password_description.rst'
+    )
 
     def _run_main(self, parsed_args, parsed_globals):
         ecr_client = create_client_from_parsed_globals(
-                self._session,
-                'ecr',
-                parsed_globals)
+            self._session, 'ecr', parsed_globals
+        )
         result = ecr_client.get_authorization_token()
         auth = result['authorizationData'][0]
         auth_token = b64decode(auth['authorizationToken']).decode()

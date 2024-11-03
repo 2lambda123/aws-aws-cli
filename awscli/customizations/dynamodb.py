@@ -11,7 +11,6 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 import base64
-import binascii
 import logging
 
 logger = logging.getLogger(__name__)
@@ -35,7 +34,7 @@ def parse_last_evaluated_key_binary(parsed, **kwargs):
             val['B'] = base64.b64decode(val['B'])
 
 
-class DynamoDBPaginatorFix(object):
+class DynamoDBPaginatorFix:
     def __init__(self, event_emitter):
         self._event_emitter = event_emitter
 

@@ -14,14 +14,10 @@ import unittest
 if os.environ.get('TESTS_REMOVE_REPO_ROOT_FROM_PATH'):
     rootdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     sys.path = [
-        path for path in sys.path
+        path
+        for path in sys.path
         if not os.path.isdir(path) or not os.path.samefile(path, rootdir)
     ]
-
-import awscli
-from awscli.clidriver import create_clidriver
-from awscli.compat import collections_abc
-from awscli.testutils import mock, capture_output
 
 import botocore.awsrequest
 import botocore.loaders
@@ -30,14 +26,20 @@ import botocore.serialize
 import botocore.validate
 from botocore.compat import HAS_CRT
 
+import awscli
+from awscli.clidriver import create_clidriver
+from awscli.compat import collections_abc
+from awscli.testutils import capture_output, mock
+
 # A shared loader to use for classes in this module. This allows us to
 # load models outside of influence of a session and take advantage of
 # caching to speed up tests.
 _LOADER = botocore.loaders.Loader()
 
 
-class CLIRunner(object):
+class CLIRunner:
     """Runs CLI commands in a stubbed environment"""
+
     def __init__(self, env=None, session_stubber=None):
         if env is None:
             env = self._get_default_env()
@@ -63,8 +65,7 @@ class CLIRunner(object):
         # future, but for now we are just replicating the logic in
         # this abstraction.
         cli_data_dir = os.path.join(
-            os.path.dirname(os.path.abspath(awscli.__file__)),
-            'data'
+            os.path.dirname(os.path.abspath(awscli.__file__)), 'data'
         )
         return {
             'AWS_DATA_PATH': cli_data_dir,
@@ -87,7 +88,7 @@ class CLIRunner(object):
         return runner_result
 
 
-class SessionStubber(object):
+class SessionStubber:
     def __init__(self):
         self.received_aws_requests = []
         self._responses = collections.deque()
@@ -95,13 +96,13 @@ class SessionStubber(object):
     def register(self, session):
         events = session.get_component('event_emitter')
         events.register_first(
-            'before-parameter-build.*.*', self._capture_aws_request,
+            'before-parameter-build.*.*',
+            self._capture_aws_request,
         )
-        events.register_last(
-            'request-created', self._capture_http_request
-        )
+        events.register_last('request-created', self._capture_http_request)
         events.register_first(
-            'before-send.*.*', self._return_queued_http_response,
+            'before-send.*.*',
+            self._return_queued_http_response,
         )
 
     def add_response(self, response):
@@ -110,8 +111,8 @@ class SessionStubber(object):
     def assert_no_remaining_responses(self):
         if len(self._responses) != 0:
             raise AssertionError(
-                "The following queued responses are remaining: %s" %
-                self._responses
+                "The following queued responses are remaining: %s"
+                % self._responses
             )
 
     def _capture_aws_request(self, params, model, context, **kwargs):
@@ -138,20 +139,22 @@ class SessionStubber(object):
         return response.on_http_request_sent(request)
 
 
-class BaseResponse(object):
+class BaseResponse:
     def on_http_request_sent(self, request):
         raise NotImplementedError('on_http_request_sent')
 
 
 class AWSResponse(BaseResponse):
-    def __init__(self, service_name, operation_name, parsed_response,
-                 validate=True):
+    def __init__(
+        self, service_name, operation_name, parsed_response, validate=True
+    ):
         self._service_name = service_name
         self._operation_name = operation_name
         self._parsed_response = parsed_response
         self._service_model = self._get_service_model()
         self._operation_model = self._service_model.operation_model(
-            self._operation_name)
+            self._operation_name
+        )
         if validate:
             self._validate_parsed_response()
 
@@ -161,8 +164,8 @@ class AWSResponse(BaseResponse):
     def __repr__(self):
         return (
             'AWSResponse(service_name=%r, operation_name=%r, '
-            'parsed_response=%r)' %
-            (self._service_name, self._operation_name, self._parsed_response)
+            'parsed_response=%r)'
+            % (self._service_name, self._operation_name, self._parsed_response)
         )
 
     def _get_service_model(self):
@@ -170,18 +173,19 @@ class AWSResponse(BaseResponse):
             service_name=self._service_name, type_name='service-2'
         )
         return botocore.model.ServiceModel(
-            loaded_service_model, service_name=self._service_name)
+            loaded_service_model, service_name=self._service_name
+        )
 
     def _validate_parsed_response(self):
         if self._operation_model.output_shape:
             botocore.validate.validate_parameters(
-                self._parsed_response, self._operation_model.output_shape)
+                self._parsed_response, self._operation_model.output_shape
+            )
 
     def _generate_http_response(self):
         serialized = self._reverse_serialize_parsed_response()
         return HTTPResponse(
-            headers=serialized['headers'],
-            body=serialized['body']
+            headers=serialized['headers'], body=serialized['body']
         )
 
     def _reverse_serialize_parsed_response(self):
@@ -202,7 +206,8 @@ class AWSResponse(BaseResponse):
         )
         self._operation_model.input_shape = self._operation_model.output_shape
         return serializer.serialize_to_request(
-            self._parsed_response, self._operation_model)
+            self._parsed_response, self._operation_model
+        )
 
 
 class HTTPResponse(BaseResponse):
@@ -220,7 +225,7 @@ class HTTPResponse(BaseResponse):
         return self
 
 
-class CLIRunnerResult(object):
+class CLIRunnerResult:
     def __init__(self, rc, stdout=None, stderr=None):
         self.rc = rc
         self.stdout = stdout
@@ -228,7 +233,7 @@ class CLIRunnerResult(object):
         self.aws_requests = []
 
 
-class AWSRequest(object):
+class AWSRequest:
     def __init__(self, service_name, operation_name, params):
         self.service_name = service_name
         self.operation_name = operation_name
@@ -236,23 +241,24 @@ class AWSRequest(object):
         self.http_requests = []
 
     def __repr__(self):
-        return (
-            'AWSRequest(service_name=%r, operation_name=%r, params=%r)' %
-            (self.service_name, self.operation_name, self.params)
+        return 'AWSRequest(service_name=%r, operation_name=%r, params=%r)' % (
+            self.service_name,
+            self.operation_name,
+            self.params,
         )
 
     def __eq__(self, other):
         return (
-            self.service_name == other.service_name and
-            self.operation_name == other.operation_name and
-            self.params == other.params
+            self.service_name == other.service_name
+            and self.operation_name == other.operation_name
+            and self.params == other.params
         )
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
 
-class HTTPRequest(object):
+class HTTPRequest:
     def __init__(self, method, url, headers, body):
         self.method = method
         self.url = url
@@ -260,17 +266,19 @@ class HTTPRequest(object):
         self.body = body
 
     def __repr__(self):
-        return (
-            'HTTPRequest(method=%r, url=%r, headers=%r, body=%r)' %
-            (self.method, self.url, self.headers, self.body)
+        return 'HTTPRequest(method=%r, url=%r, headers=%r, body=%r)' % (
+            self.method,
+            self.url,
+            self.headers,
+            self.body,
         )
 
     def __eq__(self, other):
         return (
-            self.method == other.method and
-            self.url == other.url and
-            self.headers == other.headers and
-            self.body == other.body
+            self.method == other.method
+            and self.url == other.url
+            and self.headers == other.headers
+            and self.body == other.body
         )
 
     def __ne__(self, other):
@@ -305,9 +313,7 @@ class CaseInsensitiveDict(collections_abc.MutableMapping):
     def lower_items(self):
         """Like iteritems(), but with all lowercase keys."""
         return (
-            (lowerkey, keyval[1])
-            for (lowerkey, keyval)
-            in self._store.items()
+            (lowerkey, keyval[1]) for (lowerkey, keyval) in self._store.items()
         )
 
     def __eq__(self, other):

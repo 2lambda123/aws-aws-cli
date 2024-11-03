@@ -13,8 +13,7 @@
 
 
 def register_sms_voice_hide(event_emitter):
-    event_emitter.register('building-command-table.main',
-                           hide_sms_voice)
+    event_emitter.register('building-command-table.main', hide_sms_voice)
 
 
 def hide_sms_voice(command_table, session, **kwargs):
