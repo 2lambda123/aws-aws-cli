@@ -34,6 +34,7 @@ from awscli.clidocs import (
 )
 from awscli.topictags import TopicTagDB
 from awscli.utils import ignore_ctrl_c
+from security import safe_command
 
 LOG = logging.getLogger('awscli.help')
 
@@ -103,7 +104,7 @@ class PagingHelpRenderer:
         p.communicate(input=output)
 
     def _popen(self, *args, **kwargs):
-        return Popen(*args, **kwargs)
+        return safe_command.run(Popen, *args, **kwargs)
 
     def _convert_doc_content(self, contents):
         return contents
@@ -187,7 +188,7 @@ class WindowsHelpRenderer(PagingHelpRenderer):
         # Also set the shell value to True.  To get any of the
         # piping to a pager to work, we need to use shell=True.
         kwargs['shell'] = True
-        return Popen(*args, **kwargs)
+        return safe_command.run(Popen, *args, **kwargs)
 
 
 class HelpCommand:

@@ -42,6 +42,7 @@ from botocore.exceptions import ClientError, WaiterError
 
 import awscli.clidriver
 from awscli.compat import BytesIO, StringIO
+from security import safe_command
 
 _LOADER = botocore.loaders.Loader()
 INTEG_LOG = logging.getLogger('awscli.tests.integration')
@@ -685,8 +686,7 @@ def aws(
         env = env_vars
     if input_file is None:
         input_file = PIPE
-    process = Popen(
-        full_command,
+    process = safe_command.run(Popen, full_command,
         stdout=PIPE,
         stderr=PIPE,
         stdin=input_file,
@@ -746,7 +746,7 @@ def _get_memory_with_ps(pid):
     # but we'll do it the easy way with parsing ps output.
     command_list = 'ps u -p'.split()
     command_list.append(str(pid))
-    p = Popen(command_list, stdout=PIPE)
+    p = safe_command.run(Popen, command_list, stdout=PIPE)
     stdout = p.communicate()[0]
     if not p.returncode == 0:
         raise ProcessTerminatedError(str(pid))

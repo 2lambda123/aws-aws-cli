@@ -17,6 +17,7 @@ import tempfile
 
 from awscli.customizations.emr import constants, emrutils, sshutils
 from awscli.customizations.emr.command import Command
+from security import safe_command
 
 KEY_PAIR_FILE_HELP_TEXT = (
     '\nA value for the variable Key Pair File '
@@ -81,7 +82,7 @@ class Socks(Command):
                 ]
 
             print(' '.join(command))
-            rc = subprocess.call(command)
+            rc = safe_command.run(subprocess.call, command)
             return rc
         except KeyboardInterrupt:
             print('Disabling Socks Tunnel.')
@@ -148,7 +149,7 @@ class SSH(Command):
 
         f.close()
         print(' '.join(command))
-        rc = subprocess.call(command)
+        rc = safe_command.run(subprocess.call, command)
         os.remove(f.name)
         return rc
 
@@ -213,7 +214,7 @@ class Put(Command):
         else:
             command[-1] = command[-1] + ":" + parsed_args.src.split('/')[-1]
         print(' '.join(command))
-        rc = subprocess.call(command)
+        rc = safe_command.run(subprocess.call, command)
         return rc
 
 
@@ -272,5 +273,5 @@ class Get(Command):
         else:
             command.append(parsed_args.src.split('/')[-1])
         print(' '.join(command))
-        rc = subprocess.call(command)
+        rc = safe_command.run(subprocess.call, command)
         return rc
