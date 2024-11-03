@@ -10,17 +10,17 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-import zipfile
 import copy
+import zipfile
 from contextlib import closing
 
-from awscli.arguments import CustomArgument, CLIArgument
+from awscli.arguments import CLIArgument, CustomArgument
 from awscli.compat import BytesIO
-
 
 ERROR_MSG = (
     "--zip-file must be a zip file with the fileb:// prefix.\n"
-    "Example usage:  --zip-file fileb://path/to/file.zip")
+    "Example usage:  --zip-file fileb://path/to/file.zip"
+)
 
 ZIP_DOCSTRING = (
     '<p>The path to the zip file of the {param_type} you are uploading. '
@@ -30,14 +30,21 @@ ZIP_DOCSTRING = (
 
 
 def register_lambda_create_function(cli):
-    cli.register('building-argument-table.lambda.create-function',
-                 ZipFileArgumentHoister('Code').hoist)
-    cli.register('building-argument-table.lambda.publish-layer-version',
-                 ZipFileArgumentHoister('Content').hoist)
-    cli.register('building-argument-table.lambda.update-function-code',
-                 _modify_zipfile_docstring)
-    cli.register('process-cli-arg.lambda.update-function-code',
-                 validate_is_zip_file)
+    cli.register(
+        'building-argument-table.lambda.create-function',
+        ZipFileArgumentHoister('Code').hoist,
+    )
+    cli.register(
+        'building-argument-table.lambda.publish-layer-version',
+        ZipFileArgumentHoister('Content').hoist,
+    )
+    cli.register(
+        'building-argument-table.lambda.update-function-code',
+        _modify_zipfile_docstring,
+    )
+    cli.register(
+        'process-cli-arg.lambda.update-function-code', validate_is_zip_file
+    )
 
 
 def validate_is_zip_file(cli_argument, value, **kwargs):
@@ -45,7 +52,7 @@ def validate_is_zip_file(cli_argument, value, **kwargs):
         _should_contain_zip_content(value)
 
 
-class ZipFileArgumentHoister(object):
+class ZipFileArgumentHoister:
     """Hoists a ZipFile argument up to the top level.
 
     Injects a top-level ZipFileArgument into the argument table which maps
@@ -54,6 +61,7 @@ class ZipFileArgumentHoister(object):
     ReplacedZipFileArgument to prevent its usage and recommend the new
     top-level injected parameter.
     """
+
     def __init__(self, serialized_name):
         self._serialized_name = serialized_name
         self._name = serialized_name.lower()
@@ -61,8 +69,10 @@ class ZipFileArgumentHoister(object):
     def hoist(self, session, argument_table, **kwargs):
         help_text = ZIP_DOCSTRING.format(param_type=self._name)
         argument_table['zip-file'] = ZipFileArgument(
-            'zip-file', help_text=help_text, cli_type_name='blob',
-            serialized_name=self._serialized_name
+            'zip-file',
+            help_text=help_text,
+            cli_type_name='blob',
+            serialized_name=self._serialized_name,
         )
         argument = argument_table[self._name]
         model = copy.deepcopy(argument.argument_model)
@@ -106,6 +116,7 @@ class ZipFileArgument(CustomArgument):
     --zip-file foo.zip winds up being serialized as
     { 'Code': { 'ZipFile': <contents of foo.zip> } }.
     """
+
     def __init__(self, *args, **kwargs):
         self._param_to_replace = kwargs.pop('serialized_name')
         super(ZipFileArgument, self).__init__(*args, **kwargs)
@@ -130,6 +141,7 @@ class ReplacedZipFileArgument(CLIArgument):
     contents. And the argument class can inject those bytes into the correct
     serialization name.
     """
+
     def __init__(self, *args, **kwargs):
         super(ReplacedZipFileArgument, self).__init__(*args, **kwargs)
         self._cli_name = '--%s' % kwargs['name']
@@ -144,7 +156,8 @@ class ReplacedZipFileArgument(CLIArgument):
                 "ZipFile cannot be provided "
                 "as part of the %s argument.  "
                 "Please use the '--zip-file' "
-                "option instead to specify a zip file." % self._cli_name)
+                "option instead to specify a zip file." % self._cli_name
+            )
         if parameters.get(self._param_to_replace):
             parameters[self._param_to_replace].update(unpacked)
         else:

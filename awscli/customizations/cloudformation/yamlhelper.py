@@ -10,10 +10,8 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-from botocore.compat import json
-from botocore.compat import OrderedDict
-
 import yaml
+from botocore.compat import OrderedDict, json
 from yaml.resolver import ScalarNode, SequenceNode
 
 
@@ -79,10 +77,10 @@ def _dict_constructor(loader, node):
 
 
 class SafeLoaderWrapper(yaml.SafeLoader):
-    """Isolated safe loader to allow for customizations without global changes.
-    """
+    """Isolated safe loader to allow for customizations without global changes."""
 
     pass
+
 
 def yaml_parse(yamlstr):
     """Parse a yaml string"""
@@ -93,8 +91,9 @@ def yaml_parse(yamlstr):
         return json.loads(yamlstr, object_pairs_hook=OrderedDict)
     except ValueError:
         loader = SafeLoaderWrapper
-        loader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, 
-                               _dict_constructor)
+        loader.add_constructor(
+            yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _dict_constructor
+        )
         loader.add_multi_constructor("!", intrinsics_multi_constructor)
         return yaml.load(yamlstr, loader)
 

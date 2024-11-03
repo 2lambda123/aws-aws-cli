@@ -15,8 +15,7 @@ from awscli.customizations.utils import make_hidden_command_alias
 
 def register_alias_sagemaker_runtime_command(event_emitter):
     event_emitter.register(
-        'building-command-table.main',
-        alias_sagemaker_runtime_command
+        'building-command-table.main', alias_sagemaker_runtime_command
     )
 
 

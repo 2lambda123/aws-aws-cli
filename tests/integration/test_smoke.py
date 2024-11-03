@@ -10,15 +10,14 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-import re
 import os
 import random
+import re
 import time
 
 import pytest
 
 from awscli.testutils import aws
-
 
 # These are a list of commands that we should run.
 # We're just verifying that we can properly send a no-arg request
@@ -59,9 +58,10 @@ COMMANDS = [
     'sqs list-queues',
     'storagegateway list-gateways',
     'swf list-domains --registration-status REGISTERED',
-    ('swf list-open-workflow-executions --domain foo '
-     '--start-time-filter oldestDate=1970-01-01'),
-
+    (
+        'swf list-open-workflow-executions --domain foo '
+        '--start-time-filter oldestDate=1970-01-01'
+    ),
     # Verify waiters as well.  We're picking the
     # "resource does not exist" type waiters so we can
     # give an identifier that doesn't exist and verify we have
@@ -105,16 +105,16 @@ ERROR_COMMANDS = [
     'sqs delete-queue --queue-url %s',
     # --gateway-arn has min length client side validation
     # so we have to generate an identifier that's long enough.
-    ('storagegateway delete-gateway --gateway-arn '
-     'foo-cli-test-foo-cli-test-foo-cli-test-%s'),
+    (
+        'storagegateway delete-gateway --gateway-arn '
+        'foo-cli-test-foo-cli-test-foo-cli-test-%s'
+    ),
     'swf deprecate-domain --name %s',
 ]
 
 
 # These services require a particular region to run.
-REGION_OVERRIDES = {
-    'route53domains': 'us-east-1'
-}
+REGION_OVERRIDES = {'route53domains': 'us-east-1'}
 
 
 def _aws(command_string, max_attempts=1, delay=5, target_rc=0):
@@ -132,10 +132,7 @@ def _aws(command_string, max_attempts=1, delay=5, target_rc=0):
     return aws(command_string, env_vars=env)
 
 
-@pytest.mark.parametrize(
-    "cmd",
-    COMMANDS
-)
+@pytest.mark.parametrize("cmd", COMMANDS)
 def test_can_make_success_request(cmd):
     result = _aws(cmd, max_attempts=5, delay=5, target_rc=0)
     assert result.rc == 0
@@ -147,10 +144,7 @@ ERROR_MESSAGE_RE = re.compile(
 )
 
 
-@pytest.mark.parametrize(
-    "cmd",
-    ERROR_COMMANDS
-)
+@pytest.mark.parametrize("cmd", ERROR_COMMANDS)
 def test_display_error_message(cmd):
     identifier = 'foo-awscli-test-%s' % random.randint(1000, 100000)
     command_string = cmd % identifier
@@ -158,6 +152,6 @@ def test_display_error_message(cmd):
     assert result.rc == 255
 
     match = ERROR_MESSAGE_RE.search(result.stderr)
-    assert match is not None, (
-        f'Error message was not displayed for command "{command_string}": {result.stderr}'
-    )
+    assert (
+        match is not None
+    ), f'Error message was not displayed for command "{command_string}": {result.stderr}'

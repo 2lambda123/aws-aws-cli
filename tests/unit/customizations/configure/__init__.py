@@ -13,11 +13,16 @@
 from botocore.exceptions import ProfileNotFound
 
 
-class FakeSession(object):
-
-    def __init__(self, all_variables, profile_does_not_exist=False,
-                 config_file_vars=None, environment_vars=None,
-                 credentials=None, profile=None):
+class FakeSession:
+    def __init__(
+        self,
+        all_variables,
+        profile_does_not_exist=False,
+        config_file_vars=None,
+        environment_vars=None,
+        credentials=None,
+        profile=None,
+    ):
         self.variables = all_variables
         self.profile_does_not_exist = profile_does_not_exist
         self.config = {}

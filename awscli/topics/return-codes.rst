@@ -6,7 +6,7 @@
 These are the following return codes returned at the end of execution
 of a CLI command:
 
-* ``0`` -- The service responded with an HTTP response status code of 200 and there 
+* ``0`` -- The service responded with an HTTP response status code of 200 and there
   were no errors from either the CLI or the service the request was made to.
 
 * ``1`` -- Limited to ``s3`` commands, at least one or more s3 transfers
@@ -31,7 +31,7 @@ of a CLI command:
 
 * ``130`` -- The process received a SIGINT (Ctrl-C).
 
-* ``255`` -- Command failed. There were errors from either the CLI or 
+* ``255`` -- Command failed. There were errors from either the CLI or
   the service the request was made to.
 
 

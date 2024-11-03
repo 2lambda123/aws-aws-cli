@@ -14,9 +14,9 @@ import os
 import shutil
 import tempfile
 
-from awscli.testutils import mock, unittest
 from awscli.argprocess import ParamError
 from awscli.customizations.cliinputjson import CliInputJSONArgument
+from awscli.testutils import mock, unittest
 
 
 class TestCliInputJSONArgument(unittest.TestCase):
@@ -40,8 +40,9 @@ class TestCliInputJSONArgument(unittest.TestCase):
     def test_register_argument_action(self):
         register_args = self.session.register.call_args_list
         self.assertEqual(register_args[0][0][0], 'calling-command.*')
-        self.assertEqual(register_args[0][0][1],
-                         self.argument.add_to_call_parameters)
+        self.assertEqual(
+            register_args[0][0][1], self.argument.add_to_call_parameters
+        )
 
     def test_add_to_call_parameters_no_file(self):
         parsed_args = mock.Mock()
@@ -49,8 +50,10 @@ class TestCliInputJSONArgument(unittest.TestCase):
         parsed_args.cli_input_json = self.input_json
         call_parameters = {}
         self.argument.add_to_call_parameters(
-            service_operation=None, call_parameters=call_parameters,
-            parsed_args=parsed_args, parsed_globals=None
+            service_operation=None,
+            call_parameters=call_parameters,
+            parsed_args=parsed_args,
+            parsed_globals=None,
         )
         self.assertEqual(call_parameters, {'A': 'foo', 'B': 'bar'})
 
@@ -60,8 +63,10 @@ class TestCliInputJSONArgument(unittest.TestCase):
         parsed_args.cli_input_json = 'file://' + self.temp_file
         call_parameters = {}
         self.argument.add_to_call_parameters(
-            service_operation=None, call_parameters=call_parameters,
-            parsed_args=parsed_args, parsed_globals=None
+            service_operation=None,
+            call_parameters=call_parameters,
+            parsed_args=parsed_args,
+            parsed_globals=None,
         )
         self.assertEqual(call_parameters, {'A': 'foo', 'B': 'bar'})
 
@@ -72,8 +77,10 @@ class TestCliInputJSONArgument(unittest.TestCase):
         call_parameters = {}
         with self.assertRaises(ParamError):
             self.argument.add_to_call_parameters(
-                service_operation=None, call_parameters=call_parameters,
-                parsed_args=parsed_args, parsed_globals=None
+                service_operation=None,
+                call_parameters=call_parameters,
+                parsed_args=parsed_args,
+                parsed_globals=None,
             )
 
     def test_add_to_call_parameters_no_clobber(self):
@@ -82,8 +89,10 @@ class TestCliInputJSONArgument(unittest.TestCase):
         # The value for ``A`` should not be clobbered by the input JSON
         call_parameters = {'A': 'baz'}
         self.argument.add_to_call_parameters(
-            service_operation=None, call_parameters=call_parameters,
-            parsed_args=parsed_args, parsed_globals=None
+            service_operation=None,
+            call_parameters=call_parameters,
+            parsed_args=parsed_args,
+            parsed_globals=None,
         )
         self.assertEqual(call_parameters, {'A': 'baz', 'B': 'bar'})
 
@@ -92,8 +101,10 @@ class TestCliInputJSONArgument(unittest.TestCase):
         parsed_args.cli_input_json = None
         call_parameters = {'A': 'baz'}
         self.argument.add_to_call_parameters(
-            service_operation=None, call_parameters=call_parameters,
-            parsed_args=parsed_args, parsed_globals=None
+            service_operation=None,
+            call_parameters=call_parameters,
+            parsed_args=parsed_args,
+            parsed_globals=None,
         )
         # Nothing should have been added to the call parameters because
         # ``cli_input_json`` is not in the ``parsed_args``

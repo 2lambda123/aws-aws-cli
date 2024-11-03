@@ -11,13 +11,14 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 import sys
-from awscli.testutils import mock, unittest
 
-from awscli import plugin
 from botocore import hooks
 
+from awscli import plugin
+from awscli.testutils import mock, unittest
 
-class FakeModule(object):
+
+class FakeModule:
     def __init__(self):
         self.called = False
         self.context = None
@@ -28,11 +29,11 @@ class FakeModule(object):
         self.context = context
         self.context.register(
             'before_operation',
-            (lambda **kwargs: self.events_seen.append(kwargs)))
+            (lambda **kwargs: self.events_seen.append(kwargs)),
+        )
 
 
 class TestPlugins(unittest.TestCase):
-
     def setUp(self):
         self.fake_module = FakeModule()
         sys.modules['__fake_plugin__'] = self.fake_module
@@ -44,13 +45,15 @@ class TestPlugins(unittest.TestCase):
         emitter = plugin.load_plugins({'fake_plugin': '__fake_plugin__'})
         self.assertTrue(self.fake_module.called)
         self.assertTrue(isinstance(emitter, hooks.HierarchicalEmitter))
-        self.assertTrue(isinstance(self.fake_module.context,
-                                   hooks.HierarchicalEmitter))
+        self.assertTrue(
+            isinstance(self.fake_module.context, hooks.HierarchicalEmitter)
+        )
 
     def test_event_hooks_can_be_passed_in(self):
         hooks = plugin.HierarchicalEmitter()
-        emitter = plugin.load_plugins({'fake_plugin': '__fake_plugin__'},
-                                      event_hooks=hooks)
+        emitter = plugin.load_plugins(
+            {'fake_plugin': '__fake_plugin__'}, event_hooks=hooks
+        )
         emitter.emit('before_operation')
         self.assertEqual(len(self.fake_module.events_seen), 1)
 
@@ -67,8 +70,7 @@ class TestPluginCanBePackage(unittest.TestCase):
         del sys.modules['__fake_plugin__.__fake__']
 
     def test_plugin_register(self):
-        plugin.load_plugins(
-            {'fake_plugin': '__fake_plugin__.__fake__.bar'})
+        plugin.load_plugins({'fake_plugin': '__fake_plugin__.__fake__.bar'})
         self.assertTrue(self.fake_module.called)
 
 
