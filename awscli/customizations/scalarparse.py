@@ -27,13 +27,13 @@ There's nothing currently done for timestamps, but this will change
 in the future.
 
 """
-from botocore.utils import parse_timestamp
+
 from botocore.exceptions import ProfileNotFound
+from botocore.utils import parse_timestamp
 
 
 def register_scalar_parser(event_handlers):
-    event_handlers.register_first(
-        'session-initialized', add_scalar_parsers)
+    event_handlers.register_first('session-initialized', add_scalar_parsers)
 
 
 def identity(x):
@@ -48,8 +48,8 @@ def add_timestamp_parser(session):
     factory = session.get_component('response_parser_factory')
     try:
         timestamp_format = session.get_scoped_config().get(
-            'cli_timestamp_format',
-            'none')
+            'cli_timestamp_format', 'none'
+        )
     except ProfileNotFound:
         # If a --profile is provided that does not exist, loading
         # a value from get_scoped_config will crash the CLI.
@@ -68,8 +68,10 @@ def add_timestamp_parser(session):
     elif timestamp_format == 'iso8601':
         timestamp_parser = iso_format
     else:
-        raise ValueError('Unknown cli_timestamp_format value: %s, valid values'
-                         ' are "none" or "iso8601"' % timestamp_format)
+        raise ValueError(
+            'Unknown cli_timestamp_format value: %s, valid values'
+            ' are "none" or "iso8601"' % timestamp_format
+        )
     factory.set_parser_defaults(timestamp_parser=timestamp_parser)
 
 

@@ -15,7 +15,6 @@ from awscli.testutils import BaseAWSCommandParamsTest
 
 
 class TestBannerResourcesHandling(BaseAWSCommandParamsTest):
-
     prefixes = [
         's3 ls s3://{banner_arn}',
         's3 cp s3://{banner_arn} .',
@@ -29,8 +28,10 @@ class TestBannerResourcesHandling(BaseAWSCommandParamsTest):
     ]
 
     def test_banner_arn_with_colon_raises_exception(self):
-        banner_arn = ('arn:aws:s3-object-lambda:us-west-2:123456789012:'
-                      'accesspoint:my-accesspoint')
+        banner_arn = (
+            'arn:aws:s3-object-lambda:us-west-2:123456789012:'
+            'accesspoint:my-accesspoint'
+        )
         banner_arn_with_key = '%s/my-key' % banner_arn
         for prefix in self.prefixes:
             cmdline = prefix.format(banner_arn=banner_arn)
@@ -41,8 +42,10 @@ class TestBannerResourcesHandling(BaseAWSCommandParamsTest):
             self.assertIn('s3 commands do not support', stderr)
 
     def test_banner_arn_with_slash_raises_exception(self):
-        banner_arn = ('arn:aws:s3-object-lambda:us-west-2:123456789012:'
-                      'accesspoint/my-accesspoint')
+        banner_arn = (
+            'arn:aws:s3-object-lambda:us-west-2:123456789012:'
+            'accesspoint/my-accesspoint'
+        )
         banner_arn_with_key = '%s/my-key' % banner_arn
         for prefix in self.prefixes:
             cmdline = prefix.format(banner_arn=banner_arn)

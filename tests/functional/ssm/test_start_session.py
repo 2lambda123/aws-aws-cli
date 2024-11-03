@@ -13,10 +13,15 @@
 import errno
 import json
 
-from awscli.testutils import BaseAWSCommandParamsTest
-from awscli.testutils import BaseAWSHelpOutputTest
-from awscli.testutils import create_clidriver, mock, temporary_file
 from botocore.exceptions import ProfileNotFound
+
+from awscli.testutils import (
+    BaseAWSCommandParamsTest,
+    BaseAWSHelpOutputTest,
+    create_clidriver,
+    mock,
+    temporary_file,
+)
 
 
 class TestSessionManager(BaseAWSCommandParamsTest):
@@ -70,10 +75,10 @@ class TestSessionManager(BaseAWSCommandParamsTest):
         expected_env.update({ssm_env_name: json.dumps(expected_response)})
 
         self.run_cmd(cmdline, expected_rc=0)
-        self.assertEqual(self.operations_called[0][0].name,
-                         'StartSession')
-        self.assertEqual(self.operations_called[0][1],
-                         {'Target': 'instance-id'})
+        self.assertEqual(self.operations_called[0][0].name, 'StartSession')
+        self.assertEqual(
+            self.operations_called[0][1], {'Target': 'instance-id'}
+        )
 
         mock_check_call.assert_called_once_with(
             [
@@ -94,8 +99,7 @@ class TestSessionManager(BaseAWSCommandParamsTest):
         self, mock_check_output, mock_check_call
     ):
         cmdline = (
-            "ssm start-session --target instance-id "
-            "--profile user_profile"
+            "ssm start-session --target instance-id " "--profile user_profile"
         )
         mock_check_call.return_value = 0
         mock_check_output.return_value = "1.2.500.0\n"
@@ -142,10 +146,10 @@ class TestSessionManager(BaseAWSCommandParamsTest):
             self.driver = create_clidriver()
             self.run_cmd(cmdline, expected_rc=0)
 
-        self.assertEqual(self.operations_called[0][0].name,
-                         'StartSession')
-        self.assertEqual(self.operations_called[0][1],
-                         {'Target': 'instance-id'})
+        self.assertEqual(self.operations_called[0][0].name, 'StartSession')
+        self.assertEqual(
+            self.operations_called[0][1], {'Target': 'instance-id'}
+        )
         mock_check_call.assert_called_once_with(
             [
                 "session-manager-plugin",
@@ -200,10 +204,10 @@ class TestSessionManager(BaseAWSCommandParamsTest):
             self.driver = create_clidriver()
             self.run_cmd(cmdline, expected_rc=0)
 
-        self.assertEqual(self.operations_called[0][0].name,
-                         'StartSession')
-        self.assertEqual(self.operations_called[0][1],
-                         {'Target': 'instance-id'})
+        self.assertEqual(self.operations_called[0][0].name, 'StartSession')
+        self.assertEqual(
+            self.operations_called[0][1], {'Target': 'instance-id'}
+        )
         mock_check_call.assert_called_once_with(
             [
                 "session-manager-plugin",
@@ -255,10 +259,10 @@ class TestSessionManager(BaseAWSCommandParamsTest):
             self.driver = create_clidriver()
             self.run_cmd(cmdline, expected_rc=0)
 
-        self.assertEqual(self.operations_called[0][0].name,
-                         'StartSession')
-        self.assertEqual(self.operations_called[0][1],
-                         {'Target': 'instance-id'})
+        self.assertEqual(self.operations_called[0][0].name, 'StartSession')
+        self.assertEqual(
+            self.operations_called[0][1], {'Target': 'instance-id'}
+        )
         mock_check_call.assert_called_once_with(
             [
                 "session-manager-plugin",
@@ -274,8 +278,7 @@ class TestSessionManager(BaseAWSCommandParamsTest):
 
     def test_start_session_with_user_profile_not_exist(self):
         cmdline = (
-            "ssm start-session --target instance-id "
-            "--profile user_profile"
+            "ssm start-session --target instance-id " "--profile user_profile"
         )
         with temporary_file('w') as f:
             f.write(
@@ -296,7 +299,7 @@ class TestSessionManager(BaseAWSCommandParamsTest):
             except ProfileNotFound as e:
                 self.assertIn(
                     'The config profile (user_profile) could not be found',
-                    str(e)
+                    str(e),
                 )
 
     @mock.patch('awscli.customizations.sessionmanager.check_call')
@@ -313,15 +316,11 @@ class TestSessionManager(BaseAWSCommandParamsTest):
             }
         ]
         self.run_cmd(cmdline, expected_rc=255)
-        self.assertEqual(
-            self.operations_called[0][0].name, "StartSession"
-        )
+        self.assertEqual(self.operations_called[0][0].name, "StartSession")
         self.assertEqual(
             self.operations_called[0][1], {"Target": "instance-id"}
         )
-        self.assertEqual(
-            self.operations_called[1][0].name, "TerminateSession"
-        )
+        self.assertEqual(self.operations_called[1][0].name, "TerminateSession")
         self.assertEqual(
             self.operations_called[1][1], {"SessionId": "session-id"}
         )
@@ -341,14 +340,14 @@ class TestSessionManager(BaseAWSCommandParamsTest):
             }
         ]
         self.run_cmd(cmdline, expected_rc=255)
-        self.assertEqual(self.operations_called[0][0].name,
-                         'StartSession')
-        self.assertEqual(self.operations_called[0][1],
-                         {'Target': 'instance-id'})
-        self.assertEqual(self.operations_called[1][0].name,
-                         'TerminateSession')
-        self.assertEqual(self.operations_called[1][1],
-                         {'SessionId': 'session-id'})
+        self.assertEqual(self.operations_called[0][0].name, 'StartSession')
+        self.assertEqual(
+            self.operations_called[0][1], {'Target': 'instance-id'}
+        )
+        self.assertEqual(self.operations_called[1][0].name, 'TerminateSession')
+        self.assertEqual(
+            self.operations_called[1][1], {'SessionId': 'session-id'}
+        )
 
 
 class TestHelpOutput(BaseAWSHelpOutputTest):

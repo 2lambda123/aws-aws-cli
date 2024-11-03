@@ -28,7 +28,9 @@ class LiveTailSessionMetadataTest(unittest.TestCase):
         metadata_update = {"sampled": True}
         self.session_metadata.update_metadata(metadata_update)
 
-        self.assertEqual(metadata_update["sampled"], self.session_metadata.is_sampled)
+        self.assertEqual(
+            metadata_update["sampled"], self.session_metadata.is_sampled
+        )
 
 
 class PrintOnlyPrinterTest(unittest.TestCase):
@@ -38,7 +40,9 @@ class PrintOnlyPrinterTest(unittest.TestCase):
         self.printer = PrintOnlyPrinter(self.output, self.log_events)
 
     def test_print_log_events(self):
-        self.log_events.extend(["First LogEvent", "Second LogEvent", "Third LogEvent"])
+        self.log_events.extend(
+            ["First LogEvent", "Second LogEvent", "Third LogEvent"]
+        )
         expected_msg = "\n".join(self.log_events) + "\n"
 
         self.printer._print_log_events()
@@ -48,7 +52,9 @@ class PrintOnlyPrinterTest(unittest.TestCase):
         self.assertEqual(0, len(self.log_events))
 
     def test_session_interrupt_while_printing(self):
-        self.log_events.extend(["First LogEvent", "Second LogEvent", "Third LogEvent"])
+        self.log_events.extend(
+            ["First LogEvent", "Second LogEvent", "Third LogEvent"]
+        )
         expected_msg = "\n".join(self.log_events) + "\n"
 
         self.printer.interrupt_session = True
@@ -59,7 +65,9 @@ class PrintOnlyPrinterTest(unittest.TestCase):
         self.assertEqual(0, len(self.log_events))
 
     def test_exception_while_printing(self):
-        self.log_events.extend(["First LogEvent", "Second LogEvent", "Third LogEvent"])
+        self.log_events.extend(
+            ["First LogEvent", "Second LogEvent", "Third LogEvent"]
+        )
         self.printer._print_log_events = mock.MagicMock(
             side_effect=BrokenPipeError("BrokenPipe")
         )
@@ -108,7 +116,9 @@ class LiveTailLogEventsCollectorTest(unittest.TestCase):
                 }
             },
         ]
-        self.response_stream.__iter__ = mock.MagicMock(return_value=iter(updates))
+        self.response_stream.__iter__ = mock.MagicMock(
+            return_value=iter(updates)
+        )
 
         self.log_events_collector._collect_log_events()
 

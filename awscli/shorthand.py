@@ -92,7 +92,8 @@ class ShorthandParseSyntaxError(ShorthandParseError):
     def _construct_msg(self):
         return (
             f"Expected: '{self.expected}', received: '{self.actual}' "
-            f"for input:\n" "{self._error_location()}"
+            f"for input:\n"
+            "{self._error_location()}"
         )
 
 
@@ -389,9 +390,7 @@ class ModelVisitor:
         self._visit({}, model, '', params)
 
     def _visit(self, parent, shape, name, value):
-        method = getattr(
-            self, f'_visit_{shape.type_name}', self._visit_scalar
-        )
+        method = getattr(self, f'_visit_{shape.type_name}', self._visit_scalar)
         method(parent, shape, name, value)
 
     def _visit_structure(self, parent, shape, name, value):
@@ -447,9 +446,7 @@ class BackCompatVisitor(ModelVisitor):
             if value is not None:
                 parent[name] = [value]
         else:
-            return super()._visit_list(
-                parent, shape, name, value
-            )
+            return super()._visit_list(parent, shape, name, value)
 
     def _visit_scalar(self, parent, shape, name, value):
         if value is None:

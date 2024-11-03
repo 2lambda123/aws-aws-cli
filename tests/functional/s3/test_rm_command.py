@@ -21,7 +21,8 @@ class TestRmCommand(BaseS3TransferCommandTest):
         self.run_cmd(cmdline, expected_rc=0)
         # The only operation we should have called is DeleteObject.
         self.assertEqual(
-            len(self.operations_called), 1, self.operations_called)
+            len(self.operations_called), 1, self.operations_called
+        )
         self.assertEqual(self.operations_called[0][0].name, 'DeleteObject')
 
     def test_delete_with_request_payer(self):
@@ -29,13 +30,15 @@ class TestRmCommand(BaseS3TransferCommandTest):
         self.run_cmd(cmdline, expected_rc=0)
         self.assert_operations_called(
             [
-                ('DeleteObject', {
-                    'Bucket': 'mybucket',
-                    'Key': 'mykey',
-                    'RequestPayer': 'requester'
-                })
+                (
+                    'DeleteObject',
+                    {
+                        'Bucket': 'mybucket',
+                        'Key': 'mykey',
+                        'RequestPayer': 'requester',
+                    },
+                )
             ]
-
         )
 
     def test_recursive_delete_with_requests(self):
@@ -48,9 +51,10 @@ class TestRmCommand(BaseS3TransferCommandTest):
         self.assert_operations_called(
             [
                 self.list_objects_request(
-                    'mybucket', RequestPayer='requester'),
+                    'mybucket', RequestPayer='requester'
+                ),
                 self.delete_object_request(
-                    'mybucket', 'mykey', RequestPayer='requester'),
+                    'mybucket', 'mykey', RequestPayer='requester'
+                ),
             ]
-
         )

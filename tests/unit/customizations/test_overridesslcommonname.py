@@ -11,14 +11,15 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 
-from awscli.testutils import create_clidriver
-from awscli.customizations.overridesslcommonname import (
-    update_endpoint_url,
-    SSL_COMMON_NAMES,
-)
+import argparse
 
 import pytest
-import argparse
+
+from awscli.customizations.overridesslcommonname import (
+    SSL_COMMON_NAMES,
+    update_endpoint_url,
+)
+from awscli.testutils import create_clidriver
 
 
 def parameters():

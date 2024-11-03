@@ -10,13 +10,12 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-from awscli.customizations import preview
 from awscli.compat import StringIO
-from awscli.testutils import mock, BaseAWSCommandParamsTest
+from awscli.customizations import preview
+from awscli.testutils import BaseAWSCommandParamsTest, mock
 
 
 class TestPreviewMode(BaseAWSCommandParamsTest):
-
     def setUp(self):
         super(TestPreviewMode, self).setUp()
         self.stderr = StringIO()
@@ -40,16 +39,20 @@ class TestPreviewMode(BaseAWSCommandParamsTest):
         self.assertIn('sdb', preview.PREVIEW_SERVICES)
         rc = self.driver.main('sdb list-domains'.split())
         self.assertEqual(rc, 1)
-        self.assertIn(preview.PreviewModeCommandMixin.HELP_SNIPPET,
-                      self.stderr.getvalue())
+        self.assertIn(
+            preview.PreviewModeCommandMixin.HELP_SNIPPET,
+            self.stderr.getvalue(),
+        )
 
     def test_preview_service_not_true(self):
         # If it's not "true" then we still make it a preview service.
         self.full_config['preview'] = {'sdb': 'false'}
         rc = self.driver.main('sdb list-domains'.split())
         self.assertEqual(rc, 1)
-        self.assertIn(preview.PreviewModeCommandMixin.HELP_SNIPPET,
-                      self.stderr.getvalue())
+        self.assertIn(
+            preview.PreviewModeCommandMixin.HELP_SNIPPET,
+            self.stderr.getvalue(),
+        )
 
     def test_preview_service_enabled_makes_call(self):
         self.full_config['preview'] = {'sdb': 'true'}
@@ -65,8 +68,9 @@ class TestPreviewMode(BaseAWSCommandParamsTest):
         # and we check that we rendered the contents correctly.
         self.assertTrue(get_renderer.return_value.render.called)
         contents = get_renderer.return_value.render.call_args[0][0]
-        self.assertIn('aws configure set preview.sdb true',
-                      contents.decode('utf-8'))
+        self.assertIn(
+            'aws configure set preview.sdb true', contents.decode('utf-8')
+        )
 
     @mock.patch('awscli.help.get_renderer')
     def test_document_preview_service_operation(self, get_renderer):
@@ -78,8 +82,9 @@ class TestPreviewMode(BaseAWSCommandParamsTest):
         # out of preview in the config file.
         self.assertTrue(get_renderer.return_value.render.called)
         contents = get_renderer.return_value.render.call_args[0][0]
-        self.assertIn('aws configure set preview.sdb true',
-                      contents.decode('utf-8'))
+        self.assertIn(
+            'aws configure set preview.sdb true', contents.decode('utf-8')
+        )
 
     @mock.patch('awscli.help.get_renderer')
     def test_preview_mode_is_in_provider_help(self, renderer):

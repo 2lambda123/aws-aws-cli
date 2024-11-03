@@ -10,12 +10,12 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-from botocore.compat import urlparse, parse_qs
+from botocore.compat import parse_qs, urlparse
 
-from awscli.testutils import mock
-from awscli.testutils import FileCreator
-from awscli.testutils import BaseAWSPreviewCommandParamsTest as \
-    BaseAWSCommandParamsTest
+from awscli.testutils import (
+    BaseAWSPreviewCommandParamsTest as BaseAWSCommandParamsTest,
+)
+from awscli.testutils import FileCreator, mock
 
 
 class TestSign(BaseAWSCommandParamsTest):
@@ -65,20 +65,32 @@ class TestSign(BaseAWSCommandParamsTest):
 
     def test_canned_policy(self):
         cmdline = (
-            self.prefix + '--private-key file://' + self.private_key_file +
-            ' --date-less-than 2016-1-1')
+            self.prefix
+            + '--private-key file://'
+            + self.private_key_file
+            + ' --date-less-than 2016-1-1'
+        )
         expected_params = {
             'Key-Pair-Id': ['my_id'],
-            'Expires': ['1451606400'], 'Signature': [mock.ANY]}
+            'Expires': ['1451606400'],
+            'Signature': [mock.ANY],
+        }
         self.assertDesiredUrl(
-            self.run_cmd(cmdline)[0], 'http://example.com/hi', expected_params)
+            self.run_cmd(cmdline)[0], 'http://example.com/hi', expected_params
+        )
 
     def test_custom_policy(self):
         cmdline = (
-            self.prefix + '--private-key file://' + self.private_key_file +
-            ' --date-less-than 2016-1-1 --ip-address 12.34.56.78')
+            self.prefix
+            + '--private-key file://'
+            + self.private_key_file
+            + ' --date-less-than 2016-1-1 --ip-address 12.34.56.78'
+        )
         expected_params = {
             'Key-Pair-Id': ['my_id'],
-            'Policy': [mock.ANY], 'Signature': [mock.ANY]}
+            'Policy': [mock.ANY],
+            'Signature': [mock.ANY],
+        }
         self.assertDesiredUrl(
-            self.run_cmd(cmdline)[0], 'http://example.com/hi', expected_params)
+            self.run_cmd(cmdline)[0], 'http://example.com/hi', expected_params
+        )

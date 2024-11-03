@@ -14,6 +14,7 @@
 Utility functions to make it easier to work with customizations.
 
 """
+
 import copy
 import sys
 
@@ -110,6 +111,7 @@ def make_hidden_command_alias(command_table, existing_name, alias_name):
 def validate_mutually_exclusive_handler(*groups):
     def _handler(parsed_args, **kwargs):
         return validate_mutually_exclusive(parsed_args, *groups)
+
     return _handler
 
 
@@ -130,9 +132,11 @@ def validate_mutually_exclusive(parsed_args, *groups):
         if current_group is None:
             current_group = key_group
         elif not key_group == current_group:
-            raise ValueError('The key "%s" cannot be specified when one '
-                             'of the following keys are also specified: '
-                             '%s' % (key, ', '.join(current_group)))
+            raise ValueError(
+                'The key "%s" cannot be specified when one '
+                'of the following keys are also specified: '
+                '%s' % (key, ', '.join(current_group))
+            )
 
 
 def _get_group_for_key(key, groups):
@@ -155,8 +159,9 @@ def s3_bucket_exists(s3_client, bucket_name):
     return bucket_exists
 
 
-def create_client_from_parsed_globals(session, service_name, parsed_globals,
-                                      overrides=None):
+def create_client_from_parsed_globals(
+    session, service_name, parsed_globals, overrides=None
+):
     """Creates a service client, taking parsed_globals into account
 
     Any values specified in overrides will override the returned dict. Note
@@ -212,8 +217,9 @@ def uni_print(statement, out_file=None):
         # ``sys.stdout.encoding`` is ``None``.
         if new_encoding is None:
             new_encoding = 'ascii'
-        new_statement = statement.encode(
-            new_encoding, 'replace').decode(new_encoding)
+        new_statement = statement.encode(new_encoding, 'replace').decode(
+            new_encoding
+        )
         out_file.write(new_statement)
     out_file.flush()
 

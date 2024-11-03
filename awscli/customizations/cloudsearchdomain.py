@@ -18,12 +18,15 @@ This module customizes the cloudsearchdomain command:
 
 """
 
+
 def register_cloudsearchdomain(cli):
-    cli.register_last('calling-command.cloudsearchdomain',
-                      validate_endpoint_url)
+    cli.register_last(
+        'calling-command.cloudsearchdomain', validate_endpoint_url
+    )
 
 
 def validate_endpoint_url(parsed_globals, **kwargs):
     if parsed_globals.endpoint_url is None:
         return ValueError(
-            "--endpoint-url is required for cloudsearchdomain commands")
+            "--endpoint-url is required for cloudsearchdomain commands"
+        )

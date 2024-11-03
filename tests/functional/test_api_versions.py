@@ -10,8 +10,11 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-from awscli.testutils import create_clidriver
-from awscli.testutils import BaseAWSCommandParamsTest, FileCreator
+from awscli.testutils import (
+    BaseAWSCommandParamsTest,
+    FileCreator,
+    create_clidriver,
+)
 
 
 class TestAPIVersions(BaseAWSCommandParamsTest):
@@ -22,13 +25,13 @@ class TestAPIVersions(BaseAWSCommandParamsTest):
         # multiple api versions.
         self.service_name = 'ec2'
         self.api_version = '2014-10-01'
-        config_contents = (
-            '[default]\n'
-            'api_versions =\n'
-            '    %s = %s\n' % (self.service_name, self.api_version)
+        config_contents = '[default]\n' 'api_versions =\n' '    %s = %s\n' % (
+            self.service_name,
+            self.api_version,
         )
         self.environ['AWS_CONFIG_FILE'] = self.files.create_file(
-            'myconfig', config_contents)
+            'myconfig', config_contents
+        )
         self.driver = create_clidriver()
 
     def tearDown(self):
