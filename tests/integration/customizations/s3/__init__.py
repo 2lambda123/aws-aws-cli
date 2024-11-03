@@ -11,6 +11,7 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 from botocore.exceptions import ClientError
+
 from awscli.testutils import create_bucket
 
 
@@ -34,8 +35,9 @@ def make_s3_files(session, key1='text1.txt', key2='text2.txt', size=None):
     client.put_object(Bucket=bucket, Key=key1, Body=string1)
     if key2 is not None:
         client.put_object(Bucket=bucket, Key='another_directory/')
-        client.put_object(Bucket=bucket, Key='another_directory/%s' % key2,
-                          Body=string2)
+        client.put_object(
+            Bucket=bucket, Key='another_directory/%s' % key2, Body=string2
+        )
     return bucket
 
 

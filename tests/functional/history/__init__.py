@@ -14,9 +14,13 @@ import uuid
 
 from botocore.history import HistoryRecorder
 
-from awscli.testutils import mock, create_clidriver, FileCreator
-from awscli.testutils import BaseAWSCommandParamsTest
 from awscli.compat import BytesIO
+from awscli.testutils import (
+    BaseAWSCommandParamsTest,
+    FileCreator,
+    create_clidriver,
+    mock,
+)
 
 
 class BaseHistoryCommandParamsTest(BaseAWSCommandParamsTest):
@@ -25,21 +29,19 @@ class BaseHistoryCommandParamsTest(BaseAWSCommandParamsTest):
         super(BaseHistoryCommandParamsTest, self).setUp()
         self.history_recorder = history_recorder
         self.files = FileCreator()
-        config_contents = (
-            '[default]\n'
-            'cli_history = enabled'
-        )
+        config_contents = '[default]\n' 'cli_history = enabled'
         self.environ['AWS_CONFIG_FILE'] = self.files.create_file(
-            'config', config_contents)
+            'config', config_contents
+        )
         self.environ['AWS_CLI_HISTORY_FILE'] = self.files.create_file(
-            'history.db', '')
+            'history.db', ''
+        )
         self.driver = create_clidriver()
         # The run_cmd patches stdout with a StringIO object (similar to what
         # nose does). Therefore it will run into issues when
         # get_binary_stdout is called because it returns sys.stdout.buffer
         # for Py3 and StringIO does not have a buffer
-        self.binary_stdout_patch = mock.patch(
-            'awscli.utils.get_binary_stdout')
+        self.binary_stdout_patch = mock.patch('awscli.utils.get_binary_stdout')
         mock_get_binary_stdout = self.binary_stdout_patch.start()
         self.binary_stdout = BytesIO()
         mock_get_binary_stdout.return_value = self.binary_stdout
@@ -56,14 +58,17 @@ class BaseHistoryCommandParamsTest(BaseAWSCommandParamsTest):
         # botocore.get_global_history_recorder as the objects are already
         # instantiated as so we have to individually patch each one of these...
         self._apply_history_recorder_patch(
-            'awscli.clidriver', history_recorder)
+            'awscli.clidriver', history_recorder
+        )
         self._apply_history_recorder_patch(
-            'awscli.customizations.history', history_recorder)
+            'awscli.customizations.history', history_recorder
+        )
         return history_recorder
 
     def _apply_history_recorder_patch(self, module, history_recorder):
         patch_history_recorder = mock.patch(
-            module + '.HISTORY_RECORDER', history_recorder)
+            module + '.HISTORY_RECORDER', history_recorder
+        )
         patch_history_recorder.start()
         self.addCleanup(patch_history_recorder.stop)
 

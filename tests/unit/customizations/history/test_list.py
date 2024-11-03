@@ -15,14 +15,15 @@ import datetime
 
 from botocore.session import Session
 
-from awscli.compat import BytesIO
-from awscli.compat import ensure_text_type
-from awscli.utils import OutputStreamFactory
-from awscli.testutils import unittest, mock
-from awscli.customizations.history.list import ListCommand
-from awscli.customizations.history.list import RecordAdapter
-from awscli.customizations.history.list import TextFormatter
+from awscli.compat import BytesIO, ensure_text_type
 from awscli.customizations.history.db import DatabaseRecordReader
+from awscli.customizations.history.list import (
+    ListCommand,
+    RecordAdapter,
+    TextFormatter,
+)
+from awscli.testutils import mock, unittest
+from awscli.utils import OutputStreamFactory
 
 
 class TestRecordAdapter(unittest.TestCase):
@@ -44,12 +45,7 @@ class TestRecordAdapter(unittest.TestCase):
 
 
 class TestTextFormatter(unittest.TestCase):
-    _COL_WIDTHS = {
-        'id_a': 10,
-        'timestamp': 23,
-        'args': 10,
-        'rc': 10
-    }
+    _COL_WIDTHS = {'id_a': 10, 'timestamp': 23, 'args': 10, 'rc': 10}
 
     def setUp(self):
         self.output_stream = BytesIO()
@@ -58,58 +54,67 @@ class TestTextFormatter(unittest.TestCase):
         self.timestamp = 1511376242067
         command_time = datetime.datetime.fromtimestamp(self.timestamp / 1000)
         self.formatted_time = datetime.datetime.strftime(
-            command_time, '%Y-%m-%d %I:%M:%S %p')
+            command_time, '%Y-%m-%d %I:%M:%S %p'
+        )
 
     def _format_records(self, records):
         adapter = RecordAdapter(iter(records))
         self.formatter(adapter)
 
     def test_can_emit_single_row(self):
-        self._format_records([
-            {
-                'id_a': 'foo',
-                'timestamp': self.timestamp,
-                'args': '["s3", "ls"]',
-                'rc': 0
-            }
-        ])
+        self._format_records(
+            [
+                {
+                    'id_a': 'foo',
+                    'timestamp': self.timestamp,
+                    'args': '["s3", "ls"]',
+                    'rc': 0,
+                }
+            ]
+        )
         expected_output = 'foo       %s s3 ls     0\n' % self.formatted_time
         actual_output = ensure_text_type(self.output_stream.getvalue())
         self.assertEqual(expected_output, actual_output)
 
     def test_can_emit_multiple_rows(self):
-        self._format_records([
-            {
-                'id_a': 'foo',
-                'timestamp': self.timestamp,
-                'args': '["s3", "ls"]',
-                'rc': 0
-            },
-            {
-                'id_a': 'bar',
-                'timestamp': self.timestamp,
-                'args': '["s3", "cp"]',
-                'rc': 1
-            }
-        ])
-        expected_output = ('foo       %s s3 ls     0\n'
-                           'bar       %s s3 cp     1\n') % (
-                               self.formatted_time, self.formatted_time)
+        self._format_records(
+            [
+                {
+                    'id_a': 'foo',
+                    'timestamp': self.timestamp,
+                    'args': '["s3", "ls"]',
+                    'rc': 0,
+                },
+                {
+                    'id_a': 'bar',
+                    'timestamp': self.timestamp,
+                    'args': '["s3", "cp"]',
+                    'rc': 1,
+                },
+            ]
+        )
+        expected_output = (
+            'foo       %s s3 ls     0\n' 'bar       %s s3 cp     1\n'
+        ) % (self.formatted_time, self.formatted_time)
         actual_output = ensure_text_type(self.output_stream.getvalue())
         self.assertEqual(expected_output, actual_output)
 
     def test_can_truncate_args(self):
         # Truncate the argument if it won't fit in the space alotted to the
         # arguments field.
-        self._format_records([
-            {
-                'id_a': 'foo',
-                'timestamp': self.timestamp,
-                'args': ('["s3", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-                         'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]'),
-                'rc': 0
-            }
-        ])
+        self._format_records(
+            [
+                {
+                    'id_a': 'foo',
+                    'timestamp': self.timestamp,
+                    'args': (
+                        '["s3", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+                        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]'
+                    ),
+                    'rc': 0,
+                }
+            ]
+        )
         expected_output = 'foo       %s s3 aaa... 0\n' % self.formatted_time
         actual_output = ensure_text_type(self.output_stream.getvalue())
         self.assertEqual(expected_output, actual_output)
@@ -127,14 +132,16 @@ class TestListCommand(unittest.TestCase):
         self.output_stream = mock.Mock()
         output_stream_context.__enter__.return_value = self.output_stream
 
-        self.output_stream_factory.get_pager_stream.return_value = \
+        self.output_stream_factory.get_pager_stream.return_value = (
             output_stream_context
+        )
 
         self.db_reader = mock.Mock(DatabaseRecordReader)
         self.db_reader.iter_all_records.return_value = iter([])
 
         self.list_cmd = ListCommand(
-            self.session, self.db_reader, self.output_stream_factory)
+            self.session, self.db_reader, self.output_stream_factory
+        )
 
         self.parsed_args = argparse.Namespace()
 
@@ -142,12 +149,7 @@ class TestListCommand(unittest.TestCase):
         self.parsed_globals.color = 'auto'
 
     def _make_record(self, cid, time, args, rc):
-        record = {
-            'id_a': cid,
-            'timestamp': time,
-            'args': args,
-            'rc': rc
-        }
+        record = {'id_a': cid, 'timestamp': time, 'args': args, 'rc': rc}
         return record
 
     @mock.patch('awscli.customizations.history.commands.is_windows', False)
@@ -162,9 +164,9 @@ class TestListCommand(unittest.TestCase):
     @mock.patch('awscli.customizations.history.commands.is_a_tty')
     def test_list_does_write_values_to_stream(self, mock_is_a_tty):
         mock_is_a_tty.return_value = True
-        self.db_reader.iter_all_records.return_value = iter([
-            self._make_record('abc', 1511376242067, '["s3", "ls"]', '0')
-        ])
+        self.db_reader.iter_all_records.return_value = iter(
+            [self._make_record('abc', 1511376242067, '["s3", "ls"]', '0')]
+        )
         self.list_cmd._run_main(self.parsed_args, self.parsed_globals)
         self.assertTrue(self.output_stream.write.called)
 
@@ -173,21 +175,21 @@ class TestListCommand(unittest.TestCase):
     @mock.patch('awscli.customizations.history.list.default_pager', 'less -R')
     def test_default_pager_has_correct_args_non_windows(self, mock_is_a_tty):
         mock_is_a_tty.return_value = True
-        self.db_reader.iter_all_records.return_value = iter([
-            self._make_record('abc', 1511376242067, '["s3", "ls"]', '0')
-        ])
+        self.db_reader.iter_all_records.return_value = iter(
+            [self._make_record('abc', 1511376242067, '["s3", "ls"]', '0')]
+        )
         self.list_cmd._run_main(self.parsed_args, self.parsed_globals)
         self.output_stream_factory.get_pager_stream.assert_called_with(
-            'less -SR')
+            'less -SR'
+        )
 
     @mock.patch('awscli.customizations.history.commands.is_windows', True)
     @mock.patch('awscli.customizations.history.commands.is_a_tty')
     @mock.patch('awscli.customizations.history.list.default_pager', 'more')
     def test_default_pager_has_correct_args_windows(self, mock_is_a_tty):
         mock_is_a_tty.return_value = True
-        self.db_reader.iter_all_records.return_value = iter([
-            self._make_record('abc', 1511376242067, '["s3", "ls"]', '0')
-        ])
+        self.db_reader.iter_all_records.return_value = iter(
+            [self._make_record('abc', 1511376242067, '["s3", "ls"]', '0')]
+        )
         self.list_cmd._run_main(self.parsed_args, self.parsed_globals)
-        self.output_stream_factory.get_pager_stream.assert_called_with(
-            'more')
+        self.output_stream_factory.get_pager_stream.assert_called_with('more')

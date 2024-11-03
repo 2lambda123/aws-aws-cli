@@ -16,7 +16,9 @@ from awscli.testutils import BaseAWSCommandParamsTest
 class TestAlias(BaseAWSCommandParamsTest):
     def test_alias(self):
         # This command was aliased, both should work
-        command_template = '%s invoke-endpoint --endpoint-name foo --body bar f'
+        command_template = (
+            '%s invoke-endpoint --endpoint-name foo --body bar f'
+        )
         old_command = command_template % 'runtime.sagemaker'
         new_command = command_template % 'sagemaker-runtime'
         self.run_cmd(old_command, expected_rc=0)

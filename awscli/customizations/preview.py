@@ -29,10 +29,10 @@ be listed in the help docs, unless the service has been enabled
 in the config file as shown above.
 
 """
+
 import logging
 import sys
 import textwrap
-
 
 logger = logging.getLogger(__name__)
 
@@ -56,23 +56,29 @@ def mark_as_preview(command_table, session, **kwargs):
             # Then we don't need to swap it as a preview
             # service, the user has specifically asked to
             # enable this service.
-            logger.debug("Preview service enabled through config file: %s",
-                         preview_service)
+            logger.debug(
+                "Preview service enabled through config file: %s",
+                preview_service,
+            )
             is_enabled = True
         original_command = command_table[preview_service]
         preview_cls = type(
             'PreviewCommand',
-            (PreviewModeCommandMixin, original_command.__class__), {})
+            (PreviewModeCommandMixin, original_command.__class__),
+            {},
+        )
         command_table[preview_service] = preview_cls(
             cli_name=original_command.name,
             session=session,
             service_name=original_command.service_model.service_name,
-            is_enabled=is_enabled)
+            is_enabled=is_enabled,
+        )
         # We also want to register a handler that will update the
         # description in the docs to say that this is a preview service.
         session.get_component('event_emitter').register_last(
             'doc-description.%s' % preview_service,
-            update_description_with_preview)
+            update_description_with_preview,
+        )
 
 
 def update_description_with_preview(help_command, **kwargs):
@@ -110,7 +116,7 @@ def _get_allowed_services(session):
     return allowed
 
 
-class PreviewModeCommandMixin(object):
+class PreviewModeCommandMixin:
     ENABLE_DOCS = textwrap.dedent("""\
     However, if you'd like to use the "aws {service}" commands with the
     AWS CLI, you can enable this service by adding the following to your CLI
@@ -124,8 +130,10 @@ class PreviewModeCommandMixin(object):
         aws configure set preview.{service} true
 
     """)
-    HELP_SNIPPET = ("AWS CLI support for this service is only "
-                    "available in a preview stage.\n")
+    HELP_SNIPPET = (
+        "AWS CLI support for this service is only "
+        "available in a preview stage.\n"
+    )
 
     def __init__(self, *args, **kwargs):
         self._is_enabled = kwargs.pop('is_enabled')
@@ -134,7 +142,8 @@ class PreviewModeCommandMixin(object):
     def __call__(self, args, parsed_globals):
         if self._is_enabled or self._is_help_command(args):
             return super(PreviewModeCommandMixin, self).__call__(
-                args, parsed_globals)
+                args, parsed_globals
+            )
         else:
             return self._display_opt_in_message()
 

@@ -11,13 +11,11 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
+
 from awscli.testutils import BaseAWSCommandParamsTest
-import os
-import awscli.clidriver
 
 
 class TestCreateStack(BaseAWSCommandParamsTest):
-
     prefix = 'opsworks create-stack'
 
     def test_attributes_file(self):
@@ -26,11 +24,12 @@ class TestCreateStack(BaseAWSCommandParamsTest):
         cmdline += ' --name FooStack'
         cmdline += ' --stack-region us-west-2'
         cmdline += ' --default-instance-profile-arn arn-foofoofoo'
-        result = {'ServiceRoleArn': 'arn-blahblahblah',
-                  'Name': 'FooStack',
-                  'Region': 'us-west-2',
-                  'DefaultInstanceProfileArn': 'arn-foofoofoo'
-                  }
+        result = {
+            'ServiceRoleArn': 'arn-blahblahblah',
+            'Name': 'FooStack',
+            'Region': 'us-west-2',
+            'DefaultInstanceProfileArn': 'arn-foofoofoo',
+        }
         self.assert_params_for_cmd(cmdline, result)
 
 

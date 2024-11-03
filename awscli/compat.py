@@ -11,26 +11,18 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 
-import collections.abc as collections_abc
 import contextlib
 import io
 import locale
 import os
 import os.path
-import queue
 import re
 import shlex
 import signal
-import urllib.parse as urlparse
-from configparser import RawConfigParser
-from urllib.error import URLError
-from urllib.request import urlopen
-
-from botocore.compat import six, OrderedDict
-
 import sys
 import zipfile
 from functools import partial
+
 
 # Backwards compatible definitions from six
 PY3 = sys.version_info[0] == 3

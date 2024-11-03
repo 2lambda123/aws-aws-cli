@@ -28,10 +28,12 @@ class TestCloudTrailUtils(unittest.TestCase):
 
     def test_gets_trail_by_arn(self):
         cloudtrail_client = mock.Mock()
-        cloudtrail_client.describe_trails.return_value = {'trailList': [
-            {'TrailARN': 'a', 'Foo': 'Baz'},
-            {'TrailARN': 'b', 'Foo': 'Bar'}
-        ]}
+        cloudtrail_client.describe_trails.return_value = {
+            'trailList': [
+                {'TrailARN': 'a', 'Foo': 'Baz'},
+                {'TrailARN': 'b', 'Foo': 'Bar'},
+            ]
+        }
         result = utils.get_trail_by_arn(cloudtrail_client, 'b')
         self.assertEqual('Bar', result['Foo'])
 
@@ -39,4 +41,5 @@ class TestCloudTrailUtils(unittest.TestCase):
         cloudtrail_client = mock.Mock()
         cloudtrail_client.describe_trails.return_value = {'trailList': []}
         self.assertRaises(
-            ValueError, utils.get_trail_by_arn, cloudtrail_client, 'b')
+            ValueError, utils.get_trail_by_arn, cloudtrail_client, 'b'
+        )

@@ -10,15 +10,15 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-import os
 import json
 import logging
+import os
 
 import pytest
 
-from awscli.testutils import mock, unittest, aws, capture_output
 from awscli.clidriver import create_clidriver
 from awscli.customizations.preview import PREVIEW_SERVICES
+from awscli.testutils import aws, capture_output, mock, unittest
 
 
 class TestIntegGenerateCliSkeleton(unittest.TestCase):
@@ -31,6 +31,7 @@ class TestIntegGenerateCliSkeleton(unittest.TestCase):
     skeleton. It is only testing wheter the skeleton generator argument works
     for various services.
     """
+
     def _assert_skeleton_matches(self, actual_skeleton, expected_skeleton):
         # Assert all expected keys are present, however there may be more
         # keys in the actual skeleton generated if the API updates
@@ -98,18 +99,16 @@ def _all_commands():
                         yield command_name, sub_name
 
 
-@pytest.mark.parametrize(
-    "command_name, operation_name",
-    _all_commands()
-)
-def test_can_generate_skeletons_for_all_service_comands(command_name, operation_name):
-    command = '%s %s --generate-cli-skeleton' % (command_name,
-                                                 operation_name)
+@pytest.mark.parametrize("command_name, operation_name", _all_commands())
+def test_can_generate_skeletons_for_all_service_comands(
+    command_name, operation_name
+):
+    command = '%s %s --generate-cli-skeleton' % (command_name, operation_name)
     stdout, stderr, _ = _run_cmd(command)
     # Test that a valid JSON blob is emitted to stdout is valid.
     try:
         json.loads(stdout)
-    except ValueError as e:
+    except ValueError:
         raise AssertionError(
             f"Could not generate CLI skeleton for command: {command_name} "
             f"{operation_name}\n stdout:\n{stdout}\nstderr:\n{stderr}\n"

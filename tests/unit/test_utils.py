@@ -10,20 +10,26 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-import signal
-import platform
-import pytest
-import subprocess
 import os
+import signal
+import subprocess
 
 import botocore.model
+import pytest
 
-from awscli.testutils import unittest, skip_if_windows, mock
+from awscli.testutils import mock, skip_if_windows, unittest
 from awscli.utils import (
-    split_on_commas, ignore_ctrl_c, find_service_and_method_in_event_name,
-    is_document_type, is_document_type_container, is_streaming_blob_type,
-    is_tagged_union_type, operation_uses_document_types, ShapeWalker,
-    ShapeRecordingVisitor, OutputStreamFactory
+    OutputStreamFactory,
+    ShapeRecordingVisitor,
+    ShapeWalker,
+    find_service_and_method_in_event_name,
+    ignore_ctrl_c,
+    is_document_type,
+    is_document_type_container,
+    is_streaming_blob_type,
+    is_tagged_union_type,
+    operation_uses_document_types,
+    split_on_commas,
 )
 
 
@@ -33,42 +39,51 @@ def argument_model():
 
 
 class TestCSVSplit(unittest.TestCase):
-
     def test_normal_csv_split(self):
-        self.assertEqual(split_on_commas('foo,bar,baz'),
-                         ['foo', 'bar', 'baz'])
+        self.assertEqual(split_on_commas('foo,bar,baz'), ['foo', 'bar', 'baz'])
 
     def test_quote_split(self):
-        self.assertEqual(split_on_commas('foo,"bar",baz'),
-                         ['foo', 'bar', 'baz'])
+        self.assertEqual(
+            split_on_commas('foo,"bar",baz'), ['foo', 'bar', 'baz']
+        )
 
     def test_inner_quote_split(self):
-        self.assertEqual(split_on_commas('foo,bar="1,2,3",baz'),
-                         ['foo', 'bar=1,2,3', 'baz'])
+        self.assertEqual(
+            split_on_commas('foo,bar="1,2,3",baz'), ['foo', 'bar=1,2,3', 'baz']
+        )
 
     def test_single_quote(self):
-        self.assertEqual(split_on_commas("foo,bar='1,2,3',baz"),
-                         ['foo', 'bar=1,2,3', 'baz'])
+        self.assertEqual(
+            split_on_commas("foo,bar='1,2,3',baz"), ['foo', 'bar=1,2,3', 'baz']
+        )
 
     def test_mixing_double_single_quotes(self):
-        self.assertEqual(split_on_commas("""foo,bar="1,'2',3",baz"""),
-                         ['foo', "bar=1,'2',3", 'baz'])
+        self.assertEqual(
+            split_on_commas("""foo,bar="1,'2',3",baz"""),
+            ['foo', "bar=1,'2',3", 'baz'],
+        )
 
     def test_mixing_double_single_quotes_before_first_comma(self):
-        self.assertEqual(split_on_commas("""foo,bar="1','2',3",baz"""),
-                         ['foo', "bar=1','2',3", 'baz'])
+        self.assertEqual(
+            split_on_commas("""foo,bar="1','2',3",baz"""),
+            ['foo', "bar=1','2',3", 'baz'],
+        )
 
     def test_inner_quote_split_with_equals(self):
-        self.assertEqual(split_on_commas('foo,bar="Foo:80/bar?a=b",baz'),
-                         ['foo', 'bar=Foo:80/bar?a=b', 'baz'])
+        self.assertEqual(
+            split_on_commas('foo,bar="Foo:80/bar?a=b",baz'),
+            ['foo', 'bar=Foo:80/bar?a=b', 'baz'],
+        )
 
     def test_single_quoted_inner_value_with_no_commas(self):
-        self.assertEqual(split_on_commas("foo,bar='BAR',baz"),
-                         ['foo', 'bar=BAR', 'baz'])
+        self.assertEqual(
+            split_on_commas("foo,bar='BAR',baz"), ['foo', 'bar=BAR', 'baz']
+        )
 
     def test_escape_quotes(self):
-        self.assertEqual(split_on_commas('foo,bar=1\,2\,3,baz'),
-                         ['foo', 'bar=1,2,3', 'baz'])
+        self.assertEqual(
+            split_on_commas('foo,bar=1\,2\,3,baz'), ['foo', 'bar=1,2,3', 'baz']
+        )
 
     def test_no_commas(self):
         self.assertEqual(split_on_commas('foo'), ['foo'])
@@ -77,32 +92,44 @@ class TestCSVSplit(unittest.TestCase):
         self.assertEqual(split_on_commas('foo,'), ['foo', ''])
 
     def test_escape_backslash(self):
-        self.assertEqual(split_on_commas('foo,bar\\\\,baz\\\\,qux'),
-                         ['foo', 'bar\\', 'baz\\', 'qux'])
+        self.assertEqual(
+            split_on_commas('foo,bar\\\\,baz\\\\,qux'),
+            ['foo', 'bar\\', 'baz\\', 'qux'],
+        )
 
     def test_square_brackets(self):
-        self.assertEqual(split_on_commas('foo,bar=["a=b",\'2\',c=d],baz'),
-                         ['foo', 'bar=a=b,2,c=d', 'baz'])
+        self.assertEqual(
+            split_on_commas('foo,bar=["a=b",\'2\',c=d],baz'),
+            ['foo', 'bar=a=b,2,c=d', 'baz'],
+        )
 
     def test_quoted_square_brackets(self):
-        self.assertEqual(split_on_commas('foo,bar="[blah]",c=d],baz'),
-                         ['foo', 'bar=[blah]', 'c=d]', 'baz'])
+        self.assertEqual(
+            split_on_commas('foo,bar="[blah]",c=d],baz'),
+            ['foo', 'bar=[blah]', 'c=d]', 'baz'],
+        )
 
     def test_missing_bracket(self):
-        self.assertEqual(split_on_commas('foo,bar=[a,baz'),
-                         ['foo', 'bar=[a', 'baz'])
+        self.assertEqual(
+            split_on_commas('foo,bar=[a,baz'), ['foo', 'bar=[a', 'baz']
+        )
 
     def test_missing_bracket2(self):
-        self.assertEqual(split_on_commas('foo,bar=a],baz'),
-                         ['foo', 'bar=a]', 'baz'])
+        self.assertEqual(
+            split_on_commas('foo,bar=a],baz'), ['foo', 'bar=a]', 'baz']
+        )
 
     def test_bracket_in_middle(self):
-        self.assertEqual(split_on_commas('foo,bar=a[b][c],baz'),
-                         ['foo', 'bar=a[b][c]', 'baz'])
+        self.assertEqual(
+            split_on_commas('foo,bar=a[b][c],baz'),
+            ['foo', 'bar=a[b][c]', 'baz'],
+        )
 
     def test_end_bracket_in_value(self):
-        self.assertEqual(split_on_commas('foo,bar=[foo,*[biz]*,baz]'),
-                         ['foo', 'bar=foo,*[biz]*,baz'])
+        self.assertEqual(
+            split_on_commas('foo,bar=[foo,*[biz]*,baz]'),
+            ['foo', 'bar=foo,*[biz]*,baz'],
+        )
 
 
 @skip_if_windows("Ctrl-C not supported on windows.")
@@ -135,10 +162,10 @@ class TestFindServiceAndOperationNameFromEvent(unittest.TestCase):
         self.assertIs(operation, None)
 
 
-class MockProcess(object):
+class MockProcess:
     @property
     def stdin(self):
-        raise IOError('broken pipe')
+        raise OSError('broken pipe')
 
     def communicate(self):
         pass
@@ -151,45 +178,49 @@ class TestOutputStreamFactory(unittest.TestCase):
 
     @mock.patch('awscli.utils.get_popen_kwargs_for_pager_cmd')
     def test_pager(self, mock_get_popen_pager):
-        mock_get_popen_pager.return_value = {
-                'args': ['mypager', '--option']
-        }
+        mock_get_popen_pager.return_value = {'args': ['mypager', '--option']}
         with self.stream_factory.get_pager_stream():
             mock_get_popen_pager.assert_called_with(None)
             self.assertEqual(
                 self.popen.call_args_list,
-                [mock.call(
-                    args=['mypager', '--option'],
-                    stdin=subprocess.PIPE)]
+                [
+                    mock.call(
+                        args=['mypager', '--option'], stdin=subprocess.PIPE
+                    )
+                ],
             )
 
     @mock.patch('awscli.utils.get_popen_kwargs_for_pager_cmd')
     def test_env_configured_pager(self, mock_get_popen_pager):
-        mock_get_popen_pager.return_value = {
-            'args': ['mypager', '--option']
-        }
+        mock_get_popen_pager.return_value = {'args': ['mypager', '--option']}
         with self.stream_factory.get_pager_stream('mypager --option'):
             mock_get_popen_pager.assert_called_with('mypager --option')
             self.assertEqual(
                 self.popen.call_args_list,
-                [mock.call(
-                    args=['mypager', '--option'],
-                    stdin=subprocess.PIPE)]
+                [
+                    mock.call(
+                        args=['mypager', '--option'], stdin=subprocess.PIPE
+                    )
+                ],
             )
 
     @mock.patch('awscli.utils.get_popen_kwargs_for_pager_cmd')
     def test_pager_using_shell(self, mock_get_popen_pager):
         mock_get_popen_pager.return_value = {
-            'args': 'mypager --option', 'shell': True
+            'args': 'mypager --option',
+            'shell': True,
         }
         with self.stream_factory.get_pager_stream():
             mock_get_popen_pager.assert_called_with(None)
             self.assertEqual(
                 self.popen.call_args_list,
-                [mock.call(
-                    args='mypager --option',
-                    stdin=subprocess.PIPE,
-                    shell=True)]
+                [
+                    mock.call(
+                        args='mypager --option',
+                        stdin=subprocess.PIPE,
+                        shell=True,
+                    )
+                ],
             )
 
     def test_exit_of_context_manager_for_pager(self):
@@ -212,7 +243,7 @@ class TestOutputStreamFactory(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 with self.stream_factory.get_pager_stream():
                     pass
-        except IOError:
+        except OSError:
             self.fail('Should not raise IOError')
 
 
@@ -229,11 +260,7 @@ class BaseShapeTest(unittest.TestCase):
         return shape_cls(shape_name, shape_model, resolver)
 
     def get_doc_type_shape_definition(self):
-        return {
-            'type': 'structure',
-            'members': {},
-            'document': True
-        }
+        return {'type': 'structure', 'members': {}, 'document': True}
 
 
 class TestIsDocumentType(BaseShapeTest):
@@ -274,12 +301,13 @@ class TestIsDocumentTypeContainer(BaseShapeTest):
     def test_is_not_document_type_container_if_not_scalar(self):
         self.shapes['String'] = {'type': 'string'}
         self.assertFalse(
-            is_document_type_container(self.get_shape_model('String')))
+            is_document_type_container(self.get_shape_model('String'))
+        )
 
     def test_is_document_type_container_if_list_member(self):
         self.shapes['ListOfDocTypes'] = {
             'type': 'list',
-            'member': {'shape': 'DocType'}
+            'member': {'shape': 'DocType'},
         }
         self.shapes['DocType'] = self.get_doc_type_shape_definition()
         self.assertTrue(
@@ -290,7 +318,7 @@ class TestIsDocumentTypeContainer(BaseShapeTest):
         self.shapes['MapOfDocTypes'] = {
             'type': 'map',
             'key': {'shape': 'String'},
-            'value': {'shape': 'DocType'}
+            'value': {'shape': 'DocType'},
         }
         self.shapes['DocType'] = self.get_doc_type_shape_definition()
         self.shapes['String'] = {'type': 'string'}
@@ -301,11 +329,11 @@ class TestIsDocumentTypeContainer(BaseShapeTest):
     def test_is_document_type_container_if_nested_list_member(self):
         self.shapes['NestedListsOfDocTypes'] = {
             'type': 'list',
-            'member': {'shape': 'ListOfDocTypes'}
+            'member': {'shape': 'ListOfDocTypes'},
         }
         self.shapes['ListOfDocTypes'] = {
             'type': 'list',
-            'member': {'shape': 'DocType'}
+            'member': {'shape': 'DocType'},
         }
         self.shapes['DocType'] = self.get_doc_type_shape_definition()
         self.assertTrue(
@@ -318,39 +346,36 @@ class TestIsDocumentTypeContainer(BaseShapeTest):
 class TestOperationUsesDocumentTypes(BaseShapeTest):
     def setUp(self):
         super(TestOperationUsesDocumentTypes, self).setUp()
-        self.input_shape_definition = {
-            'type': 'structure',
-            'members': {}
-        }
+        self.input_shape_definition = {'type': 'structure', 'members': {}}
         self.shapes['Input'] = self.input_shape_definition
-        self.output_shape_definition = {
-            'type': 'structure',
-            'members': {}
-        }
+        self.output_shape_definition = {'type': 'structure', 'members': {}}
         self.shapes['Output'] = self.output_shape_definition
         self.operation_definition = {
             'input': {'shape': 'Input'},
-            'output': {'shape': 'Output'}
+            'output': {'shape': 'Output'},
         }
         self.service_model = botocore.model.ServiceModel(
             {
                 'operations': {'DescribeResource': self.operation_definition},
-                'shapes': self.shapes
+                'shapes': self.shapes,
             }
         )
         self.operation_model = self.service_model.operation_model(
-            'DescribeResource')
+            'DescribeResource'
+        )
 
     def test_operation_uses_document_types_if_doc_type_in_input(self):
         self.shapes['DocType'] = self.get_doc_type_shape_definition()
         self.input_shape_definition['members']['DocType'] = {
-            'shape': 'DocType'}
+            'shape': 'DocType'
+        }
         self.assertTrue(operation_uses_document_types(self.operation_model))
 
     def test_operation_uses_document_types_if_doc_type_in_output(self):
         self.shapes['DocType'] = self.get_doc_type_shape_definition()
         self.output_shape_definition['members']['DocType'] = {
-            'shape': 'DocType'}
+            'shape': 'DocType'
+        }
         self.assertTrue(operation_uses_document_types(self.operation_model))
 
     def test_operation_uses_document_types_is_false_when_no_doc_types(self):
@@ -366,7 +391,7 @@ class TestShapeWalker(BaseShapeTest):
     def assert_visited_shapes(self, expected_shape_names):
         self.assertEqual(
             expected_shape_names,
-            [shape.name for shape in self.visitor.visited]
+            [shape.name for shape in self.visitor.visited],
         )
 
     def test_walk_scalar(self):
@@ -379,18 +404,15 @@ class TestShapeWalker(BaseShapeTest):
             'type': 'structure',
             'members': {
                 'String1': {'shape': 'String'},
-                'String2': {'shape': 'String'}
-            }
+                'String2': {'shape': 'String'},
+            },
         }
         self.shapes['String'] = {'type': 'string'}
         self.walker.walk(self.get_shape_model('Structure'), self.visitor)
         self.assert_visited_shapes(['Structure', 'String', 'String'])
 
     def test_walk_list(self):
-        self.shapes['List'] = {
-            'type': 'list',
-            'member': {'shape': 'String'}
-        }
+        self.shapes['List'] = {'type': 'list', 'member': {'shape': 'String'}}
         self.shapes['String'] = {'type': 'string'}
         self.walker.walk(self.get_shape_model('List'), self.visitor)
         self.assert_visited_shapes(['List', 'String'])
@@ -399,7 +421,7 @@ class TestShapeWalker(BaseShapeTest):
         self.shapes['Map'] = {
             'type': 'map',
             'key': {'shape': 'KeyString'},
-            'value': {'shape': 'ValueString'}
+            'value': {'shape': 'ValueString'},
         }
         self.shapes['KeyString'] = {'type': 'string'}
         self.shapes['ValueString'] = {'type': 'string'}
@@ -411,7 +433,7 @@ class TestShapeWalker(BaseShapeTest):
             'type': 'structure',
             'members': {
                 'Recursive': {'shape': 'Recursive'},
-            }
+            },
         }
         self.walker.walk(self.get_shape_model('Recursive'), self.visitor)
         self.assert_visited_shapes(['Recursive'])
@@ -440,6 +462,6 @@ class TestTaggedUnion:
     def test_shape_is_tagged_union(self, argument_model):
         setattr(argument_model, 'is_tagged_union', True)
         assert is_tagged_union_type(argument_model)
-    
+
     def test_shape_is_not_tagged_union(self, argument_model):
         assert not is_tagged_union_type(argument_model)

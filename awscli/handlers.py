@@ -105,7 +105,10 @@ from awscli.customizations.removals import register_removals
 from awscli.customizations.route53 import register_create_hosted_zone_doc_fix
 from awscli.customizations.s3.s3 import s3_plugin_initialize
 from awscli.customizations.s3errormsg import register_s3_error_msg
-from awscli.customizations.s3events import register_event_stream_arg, register_document_expires_string
+from awscli.customizations.s3events import (
+    register_document_expires_string,
+    register_event_stream_arg,
+)
 from awscli.customizations.sagemaker import (
     register_alias_sagemaker_runtime_command,
 )

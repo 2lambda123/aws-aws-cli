@@ -10,8 +10,9 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-from awscli.testutils import mock, BaseAWSCommandParamsTest, FileCreator
 from awscli.compat import BytesIO
+from awscli.testutils import BaseAWSCommandParamsTest, FileCreator, mock
+
 
 class BaseS3TransferCommandTest(BaseAWSCommandParamsTest):
     def setUp(self):
@@ -28,13 +29,11 @@ class BaseS3TransferCommandTest(BaseAWSCommandParamsTest):
             for operation_called in self.operations_called
         ]
         self.assertEqual(
-            actual_operations_with_params, expected_operations_with_params)
+            actual_operations_with_params, expected_operations_with_params
+        )
 
     def head_object_response(self, **override_kwargs):
-        response = {
-            'ContentLength': 100,
-            'LastModified': '00:00:00Z'
-        }
+        response = {'ContentLength': 100, 'LastModified': '00:00:00Z'}
         response.update(override_kwargs)
         return response
 
@@ -42,23 +41,13 @@ class BaseS3TransferCommandTest(BaseAWSCommandParamsTest):
         contents = []
         for key in keys:
             contents.append(
-                {
-                    'Key': key,
-                    'LastModified': '00:00:00Z',
-                    'Size': 100
-                }
+                {'Key': key, 'LastModified': '00:00:00Z', 'Size': 100}
             )
 
-        return {
-            'Contents': contents,
-            'CommonPrefixes': []
-        }
+        return {'Contents': contents, 'CommonPrefixes': []}
 
     def get_object_response(self):
-        return {
-            'ETag': '"foo-1"',
-            'Body': BytesIO(b'foo')
-        }
+        return {'ETag': '"foo-1"', 'Body': BytesIO(b'foo')}
 
     def copy_object_response(self):
         return self.empty_response()
@@ -67,16 +56,10 @@ class BaseS3TransferCommandTest(BaseAWSCommandParamsTest):
         return self.empty_response()
 
     def create_mpu_response(self, upload_id):
-        return {
-            'UploadId': upload_id
-        }
+        return {'UploadId': upload_id}
 
     def upload_part_copy_response(self):
-        return {
-            'CopyPartResult': {
-                'ETag': '"etag"'
-            }
-        }
+        return {'CopyPartResult': {'ETag': '"etag"'}}
 
     def complete_mpu_response(self):
         return self.empty_response()
@@ -118,15 +101,13 @@ class BaseS3TransferCommandTest(BaseAWSCommandParamsTest):
         params.update(override_kwargs)
         return 'GetObject', params
 
-    def copy_object_request(self, source_bucket, source_key, bucket, key,
-                            **override_kwargs):
+    def copy_object_request(
+        self, source_bucket, source_key, bucket, key, **override_kwargs
+    ):
         params = {
             'Bucket': bucket,
             'Key': key,
-            'CopySource': {
-                'Bucket': source_bucket,
-                'Key': source_key
-            }
+            'CopySource': {'Bucket': source_bucket, 'Key': source_key},
         }
         params.update(override_kwargs)
         return 'CopyObject', params
@@ -147,35 +128,35 @@ class BaseS3TransferCommandTest(BaseAWSCommandParamsTest):
         params.update(override_kwargs)
         return 'CreateMultipartUpload', params
 
-    def upload_part_copy_request(self, source_bucket, source_key, bucket, key,
-                                 upload_id, **override_kwargs):
+    def upload_part_copy_request(
+        self,
+        source_bucket,
+        source_key,
+        bucket,
+        key,
+        upload_id,
+        **override_kwargs,
+    ):
         params = {
             'Bucket': bucket,
             'Key': key,
-            'CopySource': {
-                'Bucket': source_bucket,
-                'Key': source_key
-            },
+            'CopySource': {'Bucket': source_bucket, 'Key': source_key},
             'UploadId': upload_id,
-
         }
         params.update(override_kwargs)
         return 'UploadPartCopy', params
 
-    def complete_mpu_request(self, bucket, key, upload_id, num_parts,
-                             **override_kwargs):
+    def complete_mpu_request(
+        self, bucket, key, upload_id, num_parts, **override_kwargs
+    ):
         parts = []
         for i in range(num_parts):
-            parts.append(
-                {
-                    'ETag': '"etag"', 'PartNumber': i + 1
-                }
-            )
+            parts.append({'ETag': '"etag"', 'PartNumber': i + 1})
         params = {
             'Bucket': bucket,
             'Key': key,
             'UploadId': upload_id,
-            'MultipartUpload': {'Parts': parts}
+            'MultipartUpload': {'Parts': parts},
         }
         params.update(override_kwargs)
         return 'CompleteMultipartUpload', params

@@ -15,6 +15,8 @@ import signal
 import sys
 
 import botocore.session
+from botocore import __version__ as botocore_version
+from botocore import xform_name
 from botocore.compat import OrderedDict, copy_kwargs
 from botocore.exceptions import (
     NoCredentialsError,
@@ -49,8 +51,6 @@ from awscli.help import (
 )
 from awscli.plugin import load_plugins
 from awscli.utils import emit_top_level_args_parsed_event, write_exception
-from botocore import __version__ as botocore_version
-from botocore import xform_name
 
 LOG = logging.getLogger('awscli.clidriver')
 LOG_FORMAT = (
@@ -245,9 +245,7 @@ class CLIDriver:
             self._show_error(msg)
             return 255
         except NoCredentialsError as e:
-            msg = (
-                f'{e}. You can configure credentials by running "aws configure".'
-            )
+            msg = f'{e}. You can configure credentials by running "aws configure".'
             self._show_error(msg)
             return 255
         except KeyboardInterrupt:

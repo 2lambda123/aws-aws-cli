@@ -3,7 +3,8 @@
 
 Currently currently consists of only a manifest-check.
 """
-from subprocess import check_call, Popen, PIPE
+
+from subprocess import check_call
 
 
 def run(command):
@@ -15,4 +16,4 @@ def main():
 
 
 if __name__ == "__main__":
-   main()
+    main()

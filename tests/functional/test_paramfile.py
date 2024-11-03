@@ -12,13 +12,13 @@
 # language governing permissions and limitations under the License.
 import logging
 
-from awscli.testutils import mock, FileCreator, BaseAWSCommandParamsTest
 from awscli.clidriver import create_clidriver
+from awscli.testutils import BaseAWSCommandParamsTest, FileCreator, mock
 
 logger = logging.getLogger(__name__)
 
 
-class FakeResponse(object):
+class FakeResponse:
     def __init__(self, content):
         self.status_code = 200
         self.text = content
@@ -34,23 +34,24 @@ class BaseTestCLIFollowParamURL(BaseAWSCommandParamsTest):
         super(BaseTestCLIFollowParamURL, self).tearDown()
         self.files.remove_all()
 
-    def assert_param_expansion_is_correct(self, provided_param, expected_param):
+    def assert_param_expansion_is_correct(
+        self, provided_param, expected_param
+    ):
         cmd = '%s %s' % (self.prefix, provided_param)
         # We do not care about the return code here. All that is of interest
         # is what happened to the arguments before they were passed to botocore
         # which we get from the params={} key. For binary types we will fail in
         # python 3 with an rc of 255 and get an rc of 0 in python 2 where it
         # can't tell the difference, so we pass ANY here to ignore the rc.
-        self.assert_params_for_cmd(cmd,
-                                   params={'FunctionName': expected_param},
-                                   expected_rc=mock.ANY)
+        self.assert_params_for_cmd(
+            cmd, params={'FunctionName': expected_param}, expected_rc=mock.ANY
+        )
 
 
 class TestCLIFollowParamURLDefault(BaseTestCLIFollowParamURL):
     def test_does_not_prefixes_when_none_in_param(self):
         self.assert_param_expansion_is_correct(
-            provided_param='foobar',
-            expected_param='foobar'
+            provided_param='foobar', expected_param='foobar'
         )
 
     @mock.patch('awscli.paramfile.URLLib3Session.send')
@@ -59,8 +60,7 @@ class TestCLIFollowParamURLDefault(BaseTestCLIFollowParamURL):
         mock_send.return_value = FakeResponse(content=content)
         param = 'http://foobar.com'
         self.assert_param_expansion_is_correct(
-            provided_param=param,
-            expected_param=content
+            provided_param=param, expected_param=content
         )
 
     @mock.patch('awscli.paramfile.URLLib3Session.send')
@@ -69,16 +69,14 @@ class TestCLIFollowParamURLDefault(BaseTestCLIFollowParamURL):
         mock_send.return_value = FakeResponse(content=content)
         param = 'https://foobar.com'
         self.assert_param_expansion_is_correct(
-            provided_param=param,
-            expected_param=content
+            provided_param=param, expected_param=content
         )
 
     def test_does_use_file_prefix(self):
         path = self.files.create_file('foobar.txt', 'file content')
         param = 'file://%s' % path
         self.assert_param_expansion_is_correct(
-            provided_param=param,
-            expected_param='file content'
+            provided_param=param, expected_param='file content'
         )
 
     def test_does_use_fileb_prefix(self):
@@ -88,8 +86,7 @@ class TestCLIFollowParamURLDefault(BaseTestCLIFollowParamURL):
         path = self.files.create_file('foobar.txt', b'file content', mode='wb')
         param = 'fileb://%s' % path
         self.assert_param_expansion_is_correct(
-            provided_param=param,
-            expected_param=b'file content'
+            provided_param=param, expected_param=b'file content'
         )
 
 
@@ -97,23 +94,21 @@ class TestCLIFollowParamURLDisabled(BaseTestCLIFollowParamURL):
     def setUp(self):
         super(TestCLIFollowParamURLDisabled, self).setUp()
         self.environ['AWS_CONFIG_FILE'] = self.files.create_file(
-            'config',
-            '[default]\ncli_follow_urlparam = false\n')
+            'config', '[default]\ncli_follow_urlparam = false\n'
+        )
         self.driver = create_clidriver()
 
     def test_does_not_prefixes_when_none_in_param(self):
         param = 'foobar'
         self.assert_param_expansion_is_correct(
-            provided_param=param,
-            expected_param=param
+            provided_param=param, expected_param=param
         )
 
     @mock.patch('awscli.paramfile.URLLib3Session.send')
     def test_does_not_use_http_prefix(self, mock_send):
         param = 'http://foobar'
         self.assert_param_expansion_is_correct(
-            provided_param=param,
-            expected_param=param
+            provided_param=param, expected_param=param
         )
         mock_send.assert_not_called()
 
@@ -121,8 +116,7 @@ class TestCLIFollowParamURLDisabled(BaseTestCLIFollowParamURL):
     def test_does_not_use_https_prefix(self, mock_send):
         param = 'https://foobar'
         self.assert_param_expansion_is_correct(
-            provided_param=param,
-            expected_param=param
+            provided_param=param, expected_param=param
         )
         mock_send.assert_not_called()
 
@@ -130,8 +124,7 @@ class TestCLIFollowParamURLDisabled(BaseTestCLIFollowParamURL):
         path = self.files.create_file('foobar.txt', 'file content')
         param = 'file://%s' % path
         self.assert_param_expansion_is_correct(
-            provided_param=param,
-            expected_param='file content'
+            provided_param=param, expected_param='file content'
         )
 
     def test_does_use_fileb_prefix(self):
@@ -141,8 +134,7 @@ class TestCLIFollowParamURLDisabled(BaseTestCLIFollowParamURL):
         path = self.files.create_file('foobar.txt', b'file content', mode='wb')
         param = 'fileb://%s' % path
         self.assert_param_expansion_is_correct(
-            provided_param=param,
-            expected_param=b'file content'
+            provided_param=param, expected_param=b'file content'
         )
 
 
@@ -150,8 +142,8 @@ class TestCLIFollowParamURLEnabled(BaseTestCLIFollowParamURL):
     def setUp(self):
         super(TestCLIFollowParamURLEnabled, self).setUp()
         self.environ['AWS_CONFIG_FILE'] = self.files.create_file(
-            'config',
-            '[default]\ncli_follow_urlparam = true\n')
+            'config', '[default]\ncli_follow_urlparam = true\n'
+        )
         self.driver = create_clidriver()
 
     def test_does_not_prefixes_when_none_in_param(self):
@@ -163,8 +155,7 @@ class TestCLIFollowParamURLEnabled(BaseTestCLIFollowParamURL):
         mock_send.return_value = FakeResponse(content=content)
         param = 'http://foobar.com'
         self.assert_param_expansion_is_correct(
-            provided_param=param,
-            expected_param=content
+            provided_param=param, expected_param=content
         )
 
     @mock.patch('awscli.paramfile.URLLib3Session.send')
@@ -173,16 +164,14 @@ class TestCLIFollowParamURLEnabled(BaseTestCLIFollowParamURL):
         mock_send.return_value = FakeResponse(content=content)
         param = 'https://foobar.com'
         self.assert_param_expansion_is_correct(
-            provided_param=param,
-            expected_param=content
+            provided_param=param, expected_param=content
         )
 
     def test_does_use_file_prefix(self):
         path = self.files.create_file('foobar.txt', 'file content')
         param = 'file://%s' % path
         self.assert_param_expansion_is_correct(
-            provided_param=param,
-            expected_param='file content'
+            provided_param=param, expected_param='file content'
         )
 
     def test_does_use_fileb_prefix(self):
@@ -192,6 +181,5 @@ class TestCLIFollowParamURLEnabled(BaseTestCLIFollowParamURL):
         path = self.files.create_file('foobar.txt', b'file content', mode='wb')
         param = 'fileb://%s' % path
         self.assert_param_expansion_is_correct(
-            provided_param=param,
-            expected_param=b'file content'
+            provided_param=param, expected_param=b'file content'
         )

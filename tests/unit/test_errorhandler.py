@@ -10,13 +10,11 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-from awscli.testutils import mock, unittest
-
 from awscli import errorhandler
+from awscli.testutils import mock, unittest
 
 
 class TestErrorHandler(unittest.TestCase):
-
     def create_http_response(self, **kwargs):
         response = mock.Mock()
         for key, value in kwargs.items():
@@ -25,11 +23,14 @@ class TestErrorHandler(unittest.TestCase):
 
     def test_error_handler_client_side(self):
         response = {
-            'Error': {'Code': 'AccessDenied',
-                      'HostId': 'foohost',
-                      'Message': 'Access Denied',
-                      'RequestId': 'requestid'},
-            'ResponseMetadata': {}}
+            'Error': {
+                'Code': 'AccessDenied',
+                'HostId': 'foohost',
+                'Message': 'Access Denied',
+                'RequestId': 'requestid',
+            },
+            'ResponseMetadata': {},
+        }
         handler = errorhandler.ErrorHandler()
         http_response = self.create_http_response(status_code=403)
         # We're manually using the try/except form because
@@ -52,16 +53,21 @@ class TestErrorHandler(unittest.TestCase):
         except Exception as e:
             self.fail("Unexpected error raised: %s" % e)
         else:
-            self.fail("Expected errorhandler.ClientError to be raised "
-                      "but no exception was raised.")
+            self.fail(
+                "Expected errorhandler.ClientError to be raised "
+                "but no exception was raised."
+            )
 
     def test_error_handler_server_side(self):
         response = {
-            'Error': {'Code': 'InternalError',
-                      'HostId': 'foohost',
-                      'Message': 'An internal error has occurred',
-                      'RequestId': 'requestid'},
-            'ResponseMetadata': {}}
+            'Error': {
+                'Code': 'InternalError',
+                'HostId': 'foohost',
+                'Message': 'An internal error has occurred',
+                'RequestId': 'requestid',
+            },
+            'ResponseMetadata': {},
+        }
         handler = errorhandler.ErrorHandler()
         http_response = self.create_http_response(status_code=500)
         # We're manually using the try/except form because
@@ -84,8 +90,10 @@ class TestErrorHandler(unittest.TestCase):
         except Exception as e:
             self.fail("Unexpected error raised: %s" % e)
         else:
-            self.fail("Expected errorhandler.ServerError to be raised "
-                      "but no exception was raised.")
+            self.fail(
+                "Expected errorhandler.ServerError to be raised "
+                "but no exception was raised."
+            )
 
     def test_no_exception_raised_on_200(self):
         response = {

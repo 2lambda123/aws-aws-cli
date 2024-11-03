@@ -366,9 +366,7 @@ class ServiceHelpCommand(HelpCommand):
     def __init__(
         self, session, obj, command_table, arg_table, name, event_class
     ):
-        super().__init__(
-            session, obj, command_table, arg_table
-        )
+        super().__init__(session, obj, command_table, arg_table)
         self._name = name
         self._event_class = event_class
 

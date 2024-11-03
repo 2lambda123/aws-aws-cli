@@ -47,9 +47,7 @@ class CommandAction(argparse.Action):
 
     def __init__(self, option_strings, dest, command_table, **kwargs):
         self.command_table = command_table
-        super().__init__(
-            option_strings, dest, choices=self.choices, **kwargs
-        )
+        super().__init__(option_strings, dest, choices=self.choices, **kwargs)
 
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values)
@@ -97,9 +95,7 @@ class CLIArgParser(argparse.ArgumentParser):
             raise argparse.ArgumentError(action, '\n'.join(msg))
 
     def parse_known_args(self, args, namespace=None):
-        parsed, remaining = super().parse_known_args(
-            args, namespace
-        )
+        parsed, remaining = super().parse_known_args(args, namespace)
         terminal_encoding = getattr(sys.stdin, 'encoding', 'utf-8')
         if terminal_encoding is None:
             # In some cases, sys.stdin won't have an encoding set,
@@ -214,6 +210,4 @@ class ArgTableArgParser(CLIArgParser):
             namespace.help = 'help'
             return namespace, []
         else:
-            return super().parse_known_args(
-                args, namespace
-            )
+            return super().parse_known_args(args, namespace)

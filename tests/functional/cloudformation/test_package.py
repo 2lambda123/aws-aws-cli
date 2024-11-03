@@ -12,18 +12,17 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 
+import os
 import shutil
 import tempfile
-import os
 import zipfile
-
 from unittest import TestCase
+
 from awscli.customizations.cloudformation.artifact_exporter import make_zip
 from awscli.testutils import skip_if_windows
 
 
 class TestPackageZipFiles(TestCase):
-
     def setUp(self):
         self.rootdir = tempfile.mkdtemp()
         self.ziproot = os.path.join(self.rootdir, "zipcontents")
@@ -49,7 +48,9 @@ class TestPackageZipFiles(TestCase):
         os.symlink(data_file, link_name)
 
         # Zip up the contents of folder `ziproot` which contains the symlink
-        zipfile_path = make_zip(os.path.join(self.rootdir, "archive"), self.ziproot)
+        zipfile_path = make_zip(
+            os.path.join(self.rootdir, "archive"), self.ziproot
+        )
 
         # Now verify that the zipfile includes contents of the data file we created
         myzip = zipfile.ZipFile(zipfile_path)

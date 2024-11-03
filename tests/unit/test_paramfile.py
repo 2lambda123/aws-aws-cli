@@ -10,14 +10,17 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-from awscli.testutils import mock, unittest, FileCreator
-from awscli.testutils import skip_if_windows
-
-from awscli.paramfile import get_paramfile, ResourceLoadingError
-from awscli.paramfile import LOCAL_PREFIX_MAP, REMOTE_PREFIX_MAP
-from awscli.paramfile import register_uri_param_handler
-from botocore.session import Session
 from botocore.exceptions import ProfileNotFound
+from botocore.session import Session
+
+from awscli.paramfile import (
+    LOCAL_PREFIX_MAP,
+    REMOTE_PREFIX_MAP,
+    ResourceLoadingError,
+    get_paramfile,
+    register_uri_param_handler,
+)
+from awscli.testutils import FileCreator, mock, skip_if_windows, unittest
 
 
 class TestParamFile(unittest.TestCase):
@@ -46,8 +49,9 @@ class TestParamFile(unittest.TestCase):
         self.assertEqual(data, b'This is a test')
         self.assertIsInstance(data, bytes)
 
-    @skip_if_windows('Binary content error only occurs '
-                     'on non-Windows platforms.')
+    @skip_if_windows(
+        'Binary content error only occurs ' 'on non-Windows platforms.'
+    )
     def test_cannot_load_text_file(self):
         contents = b'\xbfX\xac\xbe'
         filename = self.files.create_file('foo', contents, mode='wb')
@@ -131,7 +135,8 @@ class TestConfigureURIArgumentHandler(unittest.TestCase):
     def test_config_value_true(self, mock_handler_cls):
         session = mock.Mock(spec=Session)
         session.get_scoped_config.return_value = {
-            'cli_follow_urlparam': 'true'}
+            'cli_follow_urlparam': 'true'
+        }
 
         register_uri_param_handler(session)
         cases = mock_handler_cls.call_args[0][0]
@@ -145,7 +150,8 @@ class TestConfigureURIArgumentHandler(unittest.TestCase):
     def test_config_value_false(self, mock_handler_cls):
         session = mock.Mock(spec=Session)
         session.get_scoped_config.return_value = {
-            'cli_follow_urlparam': 'false'}
+            'cli_follow_urlparam': 'false'
+        }
 
         register_uri_param_handler(session)
         cases = mock_handler_cls.call_args[0][0]

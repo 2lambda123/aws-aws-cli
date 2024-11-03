@@ -184,7 +184,8 @@ class CLIDocumentEventHandler:
                 # This arg is already documented so we can move on.
                 return
             name = ' | '.join(
-                f'``{a.cli_name}``' for a in self._arg_groups[argument.group_name]
+                f'``{a.cli_name}``'
+                for a in self._arg_groups[argument.group_name]
             )
             self._documented_arg_groups.append(argument.group_name)
         else:
@@ -476,7 +477,9 @@ class OperationDocumentEventHandler(CLIDocumentEventHandler):
         if argument_model.type_name == 'list':
             doc.write('[')
             if argument_model.member.type_name in SCALAR_TYPES:
-                example_name = self._json_example_value_name(argument_model.member)
+                example_name = self._json_example_value_name(
+                    argument_model.member
+                )
                 doc.write(f'{example_name}, ...')
             else:
                 doc.style.indent()
