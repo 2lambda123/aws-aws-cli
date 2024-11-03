@@ -23,7 +23,6 @@ import sys
 import zipfile
 from functools import partial
 
-
 # Backwards compatible definitions from six
 PY3 = sys.version_info[0] == 3
 advance_iterator = next

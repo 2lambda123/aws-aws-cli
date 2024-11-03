@@ -39,10 +39,10 @@ from unittest import mock
 import botocore.loaders
 from botocore.awsrequest import AWSResponse
 from botocore.exceptions import ClientError, WaiterError
+from security import safe_command
 
 import awscli.clidriver
 from awscli.compat import BytesIO, StringIO
-from security import safe_command
 
 _LOADER = botocore.loaders.Loader()
 INTEG_LOG = logging.getLogger('awscli.tests.integration')
@@ -686,7 +686,9 @@ def aws(
         env = env_vars
     if input_file is None:
         input_file = PIPE
-    process = safe_command.run(Popen, full_command,
+    process = safe_command.run(
+        Popen,
+        full_command,
         stdout=PIPE,
         stderr=PIPE,
         stdin=input_file,

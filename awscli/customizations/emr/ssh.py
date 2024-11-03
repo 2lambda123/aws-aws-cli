@@ -15,9 +15,10 @@ import os
 import subprocess
 import tempfile
 
+from security import safe_command
+
 from awscli.customizations.emr import constants, emrutils, sshutils
 from awscli.customizations.emr.command import Command
-from security import safe_command
 
 KEY_PAIR_FILE_HELP_TEXT = (
     '\nA value for the variable Key Pair File '

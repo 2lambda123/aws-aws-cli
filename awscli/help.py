@@ -19,6 +19,7 @@ from subprocess import PIPE, Popen
 
 from docutils.core import publish_string
 from docutils.writers import manpage
+from security import safe_command
 
 from awscli.argparser import ArgTableArgParser
 from awscli.argprocess import ParamShorthandParser
@@ -34,7 +35,6 @@ from awscli.clidocs import (
 )
 from awscli.topictags import TopicTagDB
 from awscli.utils import ignore_ctrl_c
-from security import safe_command
 
 LOG = logging.getLogger('awscli.help')
 
