@@ -24,10 +24,10 @@ def _generate_command_tests():
         if hasattr(sub_help, 'command_table'):
             yield command_name, sub_help.command_table, top_level_params
 
+
 @pytest.mark.validates_models
 @pytest.mark.parametrize(
-    "command_name, command_table, builtins",
-    _generate_command_tests()
+    "command_name, command_table, builtins", _generate_command_tests()
 )
 def test_no_shadowed_builtins(command_name, command_table, builtins):
     """Verify no command params are shadowed or prefixed by the built in param.
@@ -64,6 +64,7 @@ def test_no_shadowed_builtins(command_name, command_table, builtins):
                 # Then we are shadowing or prefixing a top level argument
                 errors.append(
                     'Shadowing/Prefixing a top level option: '
-                    '%s.%s.%s' % (command_name, sub_name, arg_name))
+                    '%s.%s.%s' % (command_name, sub_name, arg_name)
+                )
     if errors:
         raise AssertionError('\n' + '\n'.join(errors))

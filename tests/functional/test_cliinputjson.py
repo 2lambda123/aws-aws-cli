@@ -10,9 +10,9 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-import tempfile
-import shutil
 import os
+import shutil
+import tempfile
 
 from awscli.testutils import BaseAWSCommandParamsTest
 
@@ -35,8 +35,9 @@ class TestCLIInputJSON(BaseAWSCommandParamsTest):
         cmdline = (
             's3api head-object --cli-input-json file://%s'
         ) % self.temp_file
-        self.assert_params_for_cmd(cmdline, params={'Bucket': 'bucket',
-                                                    'Key': 'key'})
+        self.assert_params_for_cmd(
+            cmdline, params={'Bucket': 'bucket', 'Key': 'key'}
+        )
 
     def test_cli_input_json_can_override_param(self):
         cmdline = (
@@ -50,18 +51,18 @@ class TestCLIInputJSON(BaseAWSCommandParamsTest):
             's3api head-object --cli-input-json '
             '{"Bucket":"bucket","Key":"key"}'
         )
-        self.assert_params_for_cmd(cmdline, params={'Bucket': 'bucket',
-                                                    'Key': 'key'})
+        self.assert_params_for_cmd(
+            cmdline, params={'Bucket': 'bucket', 'Key': 'key'}
+        )
 
     def test_cli_input_json_missing_required(self):
         # Check that the operation properly throws an error if the json is
         # missing any required arguments and the argument is not on the
         # command line.
-        cmdline = (
-            's3api head-object --cli-input-json {"Key":"foo"}'
+        cmdline = 's3api head-object --cli-input-json {"Key":"foo"}'
+        self.assert_params_for_cmd(
+            cmdline, expected_rc=255, stderr_contains='Missing'
         )
-        self.assert_params_for_cmd(cmdline, expected_rc=255,
-                                   stderr_contains='Missing')
 
     def test_cli_input_json_has_extra_unknown_args(self):
         # Check that the operation properly throws an error if the json
@@ -70,5 +71,6 @@ class TestCLIInputJSON(BaseAWSCommandParamsTest):
             's3api head-object --cli-input-json '
             '{"Bucket":"bucket","Key":"key","Foo":"bar"}'
         )
-        self.assert_params_for_cmd(cmdline, expected_rc=255,
-                                   stderr_contains='Unknown')
+        self.assert_params_for_cmd(
+            cmdline, expected_rc=255, stderr_contains='Unknown'
+        )

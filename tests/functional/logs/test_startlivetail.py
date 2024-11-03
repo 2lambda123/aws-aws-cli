@@ -10,7 +10,7 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-from awscli.testutils import mock, BaseAWSCommandParamsTest
+from awscli.testutils import BaseAWSCommandParamsTest, mock
 
 
 class TestStartLiveTailCommand(BaseAWSCommandParamsTest):
@@ -61,7 +61,8 @@ class TestStartLiveTailCommand(BaseAWSCommandParamsTest):
 
         stdout, _, _ = self.assert_params_for_cmd(
             "logs start-live-tail --log-group-identifiers {} --log-stream-names {}".format(
-                " ".join(self.log_group_identifiers), " ".join(self.log_stream_names)
+                " ".join(self.log_group_identifiers),
+                " ".join(self.log_stream_names),
             ),
             params={
                 "logGroupIdentifiers": self.log_group_identifiers,
@@ -90,7 +91,8 @@ class TestStartLiveTailCommand(BaseAWSCommandParamsTest):
 
         stdout, _, _ = self.assert_params_for_cmd(
             "logs start-live-tail --log-group-identifiers {} --log-event-filter-pattern {}".format(
-                " ".join(self.log_group_identifiers), self.log_event_filter_pattern
+                " ".join(self.log_group_identifiers),
+                self.log_event_filter_pattern,
             ),
             params={
                 "logGroupIdentifiers": self.log_group_identifiers,

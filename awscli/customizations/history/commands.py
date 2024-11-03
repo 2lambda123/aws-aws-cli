@@ -13,14 +13,16 @@
 import os
 
 from awscli.compat import is_windows
-from awscli.utils import is_a_tty
-from awscli.utils import OutputStreamFactory
-
 from awscli.customizations.commands import BasicCommand
-from awscli.customizations.history.db import DatabaseConnection
-from awscli.customizations.history.constants import HISTORY_FILENAME_ENV_VAR
-from awscli.customizations.history.constants import DEFAULT_HISTORY_FILENAME
-from awscli.customizations.history.db import DatabaseRecordReader
+from awscli.customizations.history.constants import (
+    DEFAULT_HISTORY_FILENAME,
+    HISTORY_FILENAME_ENV_VAR,
+)
+from awscli.customizations.history.db import (
+    DatabaseConnection,
+    DatabaseRecordReader,
+)
+from awscli.utils import OutputStreamFactory, is_a_tty
 
 
 class HistorySubcommand(BasicCommand):
@@ -41,7 +43,8 @@ class HistorySubcommand(BasicCommand):
 
     def _get_history_db_filename(self):
         filename = os.environ.get(
-            HISTORY_FILENAME_ENV_VAR, DEFAULT_HISTORY_FILENAME)
+            HISTORY_FILENAME_ENV_VAR, DEFAULT_HISTORY_FILENAME
+        )
         if not os.path.exists(filename):
             raise RuntimeError(
                 'Could not locate history. Make sure cli_history is set to '
@@ -59,5 +62,6 @@ class HistorySubcommand(BasicCommand):
     def _get_output_stream(self, preferred_pager=None):
         if is_a_tty():
             return self._output_stream_factory.get_pager_stream(
-                preferred_pager)
+                preferred_pager
+            )
         return self._output_stream_factory.get_stdout_stream()

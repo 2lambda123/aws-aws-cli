@@ -39,11 +39,11 @@ Arguments generally fall into one of several categories:
 
 import logging
 
+from botocore import model, xform_name
 from botocore.hooks import first_non_none_response
 
 from awscli.argprocess import unpack_cli_arg
 from awscli.schema import SchemaTransformer
-from botocore import model, xform_name
 
 LOG = logging.getLogger('awscli.arguments')
 

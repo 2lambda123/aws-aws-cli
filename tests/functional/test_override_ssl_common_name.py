@@ -11,13 +11,12 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 
-from awscli.testutils import BaseAWSCommandParamsTest
 from awscli.customizations.overridesslcommonname import SSL_COMMON_NAMES
+from awscli.testutils import BaseAWSCommandParamsTest
 
 
 class OverrideSSLCommonNameTestCase(BaseAWSCommandParamsTest):
     def _common_name_test_cases(self):
-
         service_ops = {
             "sqs": "list-queues",
             "emr": "list-clusters",

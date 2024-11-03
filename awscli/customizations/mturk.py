@@ -14,10 +14,7 @@ from awscli.customizations.utils import make_hidden_command_alias
 
 
 def register_alias_mturk_command(event_emitter):
-    event_emitter.register(
-        'building-command-table.mturk',
-        alias_mturk_command
-    )
+    event_emitter.register('building-command-table.mturk', alias_mturk_command)
 
 
 def alias_mturk_command(command_table, **kwargs):

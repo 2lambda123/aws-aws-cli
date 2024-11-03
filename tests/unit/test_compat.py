@@ -15,12 +15,14 @@ import signal
 
 import pytest
 
-from awscli.compat import ensure_text_type
-from awscli.compat import compat_shell_quote
-from awscli.compat import compat_open
-from awscli.compat import get_popen_kwargs_for_pager_cmd
-from awscli.compat import ignore_user_entered_signals
-from awscli.testutils import mock, unittest, skip_if_windows, FileCreator
+from awscli.compat import (
+    compat_open,
+    compat_shell_quote,
+    ensure_text_type,
+    get_popen_kwargs_for_pager_cmd,
+    ignore_user_entered_signals,
+)
+from awscli.testutils import FileCreator, mock, skip_if_windows, unittest
 
 
 class TestEnsureText(unittest.TestCase):
@@ -37,7 +39,7 @@ class TestEnsureText(unittest.TestCase):
         self.assertEqual(response, 'bar')
 
     def test_unicode(self):
-        value = u'baz'
+        value = 'baz'
         response = ensure_text_type(value)
         self.assertIsInstance(response, str)
         self.assertEqual(response, 'baz')
@@ -46,7 +48,7 @@ class TestEnsureText(unittest.TestCase):
         value = b'\xe2\x9c\x93'
         response = ensure_text_type(value)
         self.assertIsInstance(response, str)
-        self.assertEqual(response, u'\u2713')
+        self.assertEqual(response, '\u2713')
 
     def test_non_string_or_bytes_raises_error(self):
         value = 500
@@ -66,7 +68,7 @@ class TestEnsureText(unittest.TestCase):
         ('\\\\"', '\\\\\\\\\\"'),
         ('foo bar', '"foo bar"'),
         ('foo\tbar', '"foo\tbar"'),
-    )
+    ),
 )
 def test_compat_shell_quote_windows(input_string, expected_output):
     assert compat_shell_quote(input_string, "win32") == expected_output
@@ -81,8 +83,8 @@ def test_compat_shell_quote_windows(input_string, expected_output):
         ('foo bar', "'foo bar'"),
         ('foo\tbar', "'foo\tbar'"),
         ('foo\nbar', "'foo\nbar'"),
-        ("foo'bar", '\'foo\'"\'"\'bar\'')
-    )
+        ("foo'bar", '\'foo\'"\'"\'bar\''),
+    ),
 )
 def test_comat_shell_quote_linux(input_string, expected_output):
     assert compat_shell_quote(input_string, "linux2") == expected_output
@@ -97,8 +99,8 @@ def test_comat_shell_quote_linux(input_string, expected_output):
         ('foo bar', "'foo bar'"),
         ('foo\tbar', "'foo\tbar'"),
         ('foo\nbar', "'foo\nbar'"),
-        ("foo'bar", '\'foo\'"\'"\'bar\'')
-    )
+        ("foo'bar", '\'foo\'"\'"\'bar\''),
+    ),
 )
 def test_comat_shell_quote_darwin(input_string, expected_output):
     assert compat_shell_quote(input_string, "darwin") == expected_output
@@ -137,8 +139,10 @@ class TestIgnoreUserSignals(unittest.TestCase):
             try:
                 os.kill(os.getpid(), signal.SIGINT)
             except KeyboardInterrupt:
-                self.fail('The ignore_user_entered_signals context '
-                          'manager should have ignored')
+                self.fail(
+                    'The ignore_user_entered_signals context '
+                    'manager should have ignored'
+                )
 
     @skip_if_windows("These signals are not supported for windows")
     def test_ignore_signal_sigquit(self):

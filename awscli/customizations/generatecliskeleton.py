@@ -31,7 +31,8 @@ def add_generate_skeleton(session, operation_model, argument_table, **kwargs):
     # is designated by the argument name `outfile`.
     if 'outfile' not in argument_table:
         generate_cli_skeleton_argument = GenerateCliSkeletonArgument(
-            session, operation_model)
+            session, operation_model
+        )
         generate_cli_skeleton_argument.add_to_arg_table(argument_table)
 
 
@@ -42,6 +43,7 @@ class GenerateCliSkeletonArgument(OverrideRequiredArgsArgument):
     command from taking place. Instead, it will generate a JSON skeleton and
     print it to standard output.
     """
+
     ARG_DATA = {
         'name': 'generate-cli-skeleton',
         'help_text': (
@@ -63,7 +65,8 @@ class GenerateCliSkeletonArgument(OverrideRequiredArgsArgument):
 
     def _register_argument_action(self):
         self._session.register(
-            'calling-command.*', self.generate_json_skeleton)
+            'calling-command.*', self.generate_json_skeleton
+        )
         super(GenerateCliSkeletonArgument, self)._register_argument_action()
 
     def override_required_args(self, argument_table, args, **kwargs):
@@ -80,10 +83,12 @@ class GenerateCliSkeletonArgument(OverrideRequiredArgsArgument):
             except IndexError:
                 pass
             super(GenerateCliSkeletonArgument, self).override_required_args(
-                argument_table, args, **kwargs)
+                argument_table, args, **kwargs
+            )
 
-    def generate_json_skeleton(self, call_parameters, parsed_args,
-                               parsed_globals, **kwargs):
+    def generate_json_skeleton(
+        self, call_parameters, parsed_args, parsed_globals, **kwargs
+    ):
         if getattr(parsed_args, 'generate_cli_skeleton', None):
             for_output = parsed_args.generate_cli_skeleton == 'output'
             operation_model = self._operation_model
@@ -96,8 +101,11 @@ class GenerateCliSkeletonArgument(OverrideRequiredArgsArgument):
                 # a similar set of inputs are taken in and output
                 # similar functionality.
                 return StubbedCLIOperationCaller(self._session).invoke(
-                    service_name, operation_name, call_parameters,
-                    parsed_globals)
+                    service_name,
+                    operation_name,
+                    call_parameters,
+                    parsed_globals,
+                )
             else:
                 argument_generator = ArgumentGenerator()
                 operation_input_shape = operation_model.input_shape
@@ -105,7 +113,8 @@ class GenerateCliSkeletonArgument(OverrideRequiredArgsArgument):
                     skeleton = {}
                 else:
                     skeleton = argument_generator.generate_skeleton(
-                        operation_input_shape)
+                        operation_input_shape
+                    )
 
                 sys.stdout.write(
                     json.dumps(skeleton, indent=4, default=json_encoder)
@@ -120,16 +129,20 @@ class StubbedCLIOperationCaller(CLIOperationCaller):
     It generates a fake response and uses the response and provided parameters
     to make a stubbed client call for an operation command.
     """
-    def _make_client_call(self, client, operation_name, parameters,
-                          parsed_globals):
+
+    def _make_client_call(
+        self, client, operation_name, parameters, parsed_globals
+    ):
         method_name = xform_name(operation_name)
         operation_model = client.meta.service_model.operation_model(
-            operation_name)
+            operation_name
+        )
         fake_response = {}
         if operation_model.output_shape:
             argument_generator = ArgumentGenerator(use_member_names=True)
             fake_response = argument_generator.generate_skeleton(
-                operation_model.output_shape)
+                operation_model.output_shape
+            )
         with Stubber(client) as stubber:
             stubber.add_response(method_name, fake_response)
             return getattr(client, method_name)(**parameters)

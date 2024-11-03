@@ -11,27 +11,35 @@
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
 import sys
-import os
 
+import jmespath
 from botocore.client import Config
 from botocore.endpoint import DEFAULT_TIMEOUT
 from botocore.handlers import disable_signing
-import jmespath
 
 from awscli.compat import urlparse
 
 
 def register_parse_global_args(cli):
-    cli.register('top-level-args-parsed', resolve_types,
-                 unique_id='resolve-types')
-    cli.register('top-level-args-parsed', no_sign_request,
-                 unique_id='no-sign')
-    cli.register('top-level-args-parsed', resolve_verify_ssl,
-                 unique_id='resolve-verify-ssl')
-    cli.register('top-level-args-parsed', resolve_cli_read_timeout,
-                 unique_id='resolve-cli-read-timeout')
-    cli.register('top-level-args-parsed', resolve_cli_connect_timeout,
-                 unique_id='resolve-cli-connect-timeout')
+    cli.register(
+        'top-level-args-parsed', resolve_types, unique_id='resolve-types'
+    )
+    cli.register('top-level-args-parsed', no_sign_request, unique_id='no-sign')
+    cli.register(
+        'top-level-args-parsed',
+        resolve_verify_ssl,
+        unique_id='resolve-verify-ssl',
+    )
+    cli.register(
+        'top-level-args-parsed',
+        resolve_cli_read_timeout,
+        unique_id='resolve-cli-read-timeout',
+    )
+    cli.register(
+        'top-level-args-parsed',
+        resolve_cli_connect_timeout,
+        unique_id='resolve-cli-connect-timeout',
+    )
 
 
 def resolve_types(parsed_args, **kwargs):
@@ -60,9 +68,11 @@ def _resolve_endpoint_url(value):
     # Our http library requires you specify an endpoint url
     # that contains a scheme, so we'll verify that up front.
     if not parsed.scheme:
-        raise ValueError('Bad value for --endpoint-url "%s": scheme is '
-                         'missing.  Must be of the form '
-                         'http://<hostname>/ or https://<hostname>/' % value)
+        raise ValueError(
+            'Bad value for --endpoint-url "%s": scheme is '
+            'missing.  Must be of the form '
+            'http://<hostname>/ or https://<hostname>/' % value
+        )
     return value
 
 
@@ -89,7 +99,9 @@ def no_sign_request(parsed_args, session, **kwargs):
         # Register this first to override other handlers.
         emitter = session.get_component('event_emitter')
         emitter.register_first(
-            'choose-signer', disable_signing, unique_id='disable-signing',
+            'choose-signer',
+            disable_signing,
+            unique_id='disable-signing',
         )
 
 
