@@ -50,7 +50,7 @@ class TestParamFile(unittest.TestCase):
         self.assertIsInstance(data, bytes)
 
     @skip_if_windows(
-        'Binary content error only occurs ' 'on non-Windows platforms.'
+        'Binary content error only occurs on non-Windows platforms.'
     )
     def test_cannot_load_text_file(self):
         contents = b'\xbfX\xac\xbe'

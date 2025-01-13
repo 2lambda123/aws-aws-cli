@@ -944,8 +944,7 @@ class TestResultPrinter(BaseResultPrinterTest):
         progress_result = self.get_progress_result()
         self.result_printer(progress_result)
         ref_progress_statement = (
-            'Completed 1.0 MiB/20.0 MiB (0 Bytes/s) with 3 file(s) '
-            'remaining\r'
+            'Completed 1.0 MiB/20.0 MiB (0 Bytes/s) with 3 file(s) remaining\r'
         )
         self.assertEqual(self.out_file.getvalue(), ref_progress_statement)
 
@@ -1034,8 +1033,7 @@ class TestResultPrinter(BaseResultPrinterTest):
         progress_result = self.get_progress_result()
         self.result_printer(progress_result)
         ref_progress_statement = (
-            'Completed 1.0 MiB/20.0 MiB (7.0 KiB/s) with 3 file(s) '
-            'remaining\r'
+            'Completed 1.0 MiB/20.0 MiB (7.0 KiB/s) with 3 file(s) remaining\r'
         )
         self.assertEqual(self.out_file.getvalue(), ref_progress_statement)
 

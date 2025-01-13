@@ -30,7 +30,7 @@ class TestGetApplicationRevisionLocationArguments(BaseAWSCommandParamsTest):
 
     def test_s3_location_with_etag(self):
         cmd = self.prefix + (
-            '--s3-location bucket=b,key=k,' 'bundleType=zip,eTag=1234'
+            '--s3-location bucket=b,key=k,bundleType=zip,eTag=1234'
         )
         result = {
             'applicationName': 'foo',
@@ -48,7 +48,7 @@ class TestGetApplicationRevisionLocationArguments(BaseAWSCommandParamsTest):
 
     def test_s3_location_with_version(self):
         cmd = self.prefix + (
-            '--s3-location bucket=b,key=k,' 'bundleType=zip,version=abcd'
+            '--s3-location bucket=b,key=k,bundleType=zip,version=abcd'
         )
         result = {
             'applicationName': 'foo',
@@ -106,19 +106,19 @@ class TestGetApplicationRevisionLocationArguments(BaseAWSCommandParamsTest):
 
     def test_s3_location_missing_bucket(self):
         cmd = self.prefix + (
-            '--s3-location key=k,' 'bundleType=zip,eTag=1234,version=abcd'
+            '--s3-location key=k,bundleType=zip,eTag=1234,version=abcd'
         )
         self.run_cmd(cmd, 255)
 
     def test_s3_location_missing_key(self):
         cmd = self.prefix + (
-            '--s3-location bucket=b,' 'bundleType=zip,eTag=1234,version=abcd'
+            '--s3-location bucket=b,bundleType=zip,eTag=1234,version=abcd'
         )
         self.run_cmd(cmd, 255)
 
     def test_github_location_with_etag(self):
         cmd = self.prefix + (
-            '--github-location repository=foo/bar,' 'commitId=1234'
+            '--github-location repository=foo/bar,commitId=1234'
         )
         result = {
             'applicationName': 'foo',
@@ -134,7 +134,7 @@ class TestGetApplicationRevisionLocationArguments(BaseAWSCommandParamsTest):
 
     def test_github_location_json(self):
         cmd = self.prefix + (
-            '--github-location {"repository":"foo/bar",' '"commitId":"1234"}'
+            '--github-location {"repository":"foo/bar","commitId":"1234"}'
         )
         result = {
             'applicationName': 'foo',
@@ -149,7 +149,7 @@ class TestGetApplicationRevisionLocationArguments(BaseAWSCommandParamsTest):
         self.assert_params_for_cmd(cmd, result)
 
     def test_github_location_missing_repository(self):
-        cmd = self.prefix + ('--github-location ' 'commitId=1234')
+        cmd = self.prefix + ('--github-location commitId=1234')
         self.run_cmd(cmd, 255)
 
     def test_github_location_missing_commit_id(self):
@@ -175,7 +175,7 @@ class TestRegisterApplicationRevisionLocationArguments(
 
     def test_s3_location_with_etag(self):
         cmd = self.prefix + (
-            '--s3-location bucket=b,key=k,' 'bundleType=zip,eTag=1234'
+            '--s3-location bucket=b,key=k,bundleType=zip,eTag=1234'
         )
         result = {
             'applicationName': 'foo',
@@ -193,7 +193,7 @@ class TestRegisterApplicationRevisionLocationArguments(
 
     def test_s3_location_with_version(self):
         cmd = self.prefix + (
-            '--s3-location bucket=b,key=k,' 'bundleType=zip,version=abcd'
+            '--s3-location bucket=b,key=k,bundleType=zip,version=abcd'
         )
         result = {
             'applicationName': 'foo',
@@ -251,19 +251,19 @@ class TestRegisterApplicationRevisionLocationArguments(
 
     def test_s3_location_missing_bucket(self):
         cmd = self.prefix + (
-            '--s3-location key=k,' 'bundleType=zip,eTag=1234,version=abcd'
+            '--s3-location key=k,bundleType=zip,eTag=1234,version=abcd'
         )
         self.run_cmd(cmd, 255)
 
     def test_s3_location_missing_key(self):
         cmd = self.prefix + (
-            '--s3-location bucket=b,' 'bundleType=zip,eTag=1234,version=abcd'
+            '--s3-location bucket=b,bundleType=zip,eTag=1234,version=abcd'
         )
         self.run_cmd(cmd, 255)
 
     def test_github_location_with_etag(self):
         cmd = self.prefix + (
-            '--github-location repository=foo/bar,' 'commitId=1234'
+            '--github-location repository=foo/bar,commitId=1234'
         )
         result = {
             'applicationName': 'foo',
@@ -279,7 +279,7 @@ class TestRegisterApplicationRevisionLocationArguments(
 
     def test_github_location_json(self):
         cmd = self.prefix + (
-            '--github-location {"repository":"foo/bar",' '"commitId":"1234"}'
+            '--github-location {"repository":"foo/bar","commitId":"1234"}'
         )
         result = {
             'applicationName': 'foo',
@@ -294,7 +294,7 @@ class TestRegisterApplicationRevisionLocationArguments(
         self.assert_params_for_cmd(cmd, result)
 
     def test_github_location_missing_repository(self):
-        cmd = self.prefix + ('--github-location ' 'commitId=1234')
+        cmd = self.prefix + ('--github-location commitId=1234')
         self.run_cmd(cmd, 255)
 
     def test_github_location_missing_commit_id(self):
@@ -322,7 +322,7 @@ class TestCreateDeploymentLocationArguments(BaseAWSCommandParamsTest):
 
     def test_s3_location_with_etag(self):
         cmd = self.prefix + (
-            '--s3-location bucket=b,key=k,' 'bundleType=zip,eTag=1234'
+            '--s3-location bucket=b,key=k,bundleType=zip,eTag=1234'
         )
         result = {
             'applicationName': 'foo',
@@ -341,7 +341,7 @@ class TestCreateDeploymentLocationArguments(BaseAWSCommandParamsTest):
 
     def test_s3_location_with_version(self):
         cmd = self.prefix + (
-            '--s3-location bucket=b,key=k,' 'bundleType=zip,version=abcd'
+            '--s3-location bucket=b,key=k,bundleType=zip,version=abcd'
         )
         result = {
             'applicationName': 'foo',
@@ -402,19 +402,19 @@ class TestCreateDeploymentLocationArguments(BaseAWSCommandParamsTest):
 
     def test_s3_location_missing_bucket(self):
         cmd = self.prefix + (
-            '--s3-location key=k,' 'bundleType=zip,eTag=1234,version=abcd'
+            '--s3-location key=k,bundleType=zip,eTag=1234,version=abcd'
         )
         self.run_cmd(cmd, 255)
 
     def test_s3_location_missing_key(self):
         cmd = self.prefix + (
-            '--s3-location bucket=b,' 'bundleType=zip,eTag=1234,version=abcd'
+            '--s3-location bucket=b,bundleType=zip,eTag=1234,version=abcd'
         )
         self.run_cmd(cmd, 255)
 
     def test_github_location_with_etag(self):
         cmd = self.prefix + (
-            '--github-location repository=foo/bar,' 'commitId=1234'
+            '--github-location repository=foo/bar,commitId=1234'
         )
         result = {
             'applicationName': 'foo',
@@ -431,7 +431,7 @@ class TestCreateDeploymentLocationArguments(BaseAWSCommandParamsTest):
 
     def test_github_location_json(self):
         cmd = self.prefix + (
-            '--github-location {"repository":"foo/bar",' '"commitId":"1234"}'
+            '--github-location {"repository":"foo/bar","commitId":"1234"}'
         )
         result = {
             'applicationName': 'foo',
@@ -447,7 +447,7 @@ class TestCreateDeploymentLocationArguments(BaseAWSCommandParamsTest):
         self.assert_params_for_cmd(cmd, result)
 
     def test_github_location_missing_repository(self):
-        cmd = self.prefix + ('--github-location ' 'commitId=1234')
+        cmd = self.prefix + ('--github-location commitId=1234')
         self.run_cmd(cmd, 255)
 
     def test_github_location_missing_commit_id(self):

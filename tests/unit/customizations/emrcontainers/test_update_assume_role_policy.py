@@ -115,14 +115,12 @@ class TestUpdateAssumeRolePolicy(BaseAWSCommandParamsTest):
     # Expected results: Operation is performed by client
     # to update the trust policy in expected format
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'iam.IAM.get_assume_role_policy'
+        'awscli.customizations.emrcontainers.iam.IAM.get_assume_role_policy'
     )
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_oidc_issuer_id'
+        'awscli.customizations.emrcontainers.eks.EKS.get_oidc_issuer_id'
     )
-    @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_account_id'
-    )
+    @mock.patch('awscli.customizations.emrcontainers.eks.EKS.get_account_id')
     def test_trust_policy_does_not_exist(
         self,
         get_account_id_patch,
@@ -141,14 +139,12 @@ class TestUpdateAssumeRolePolicy(BaseAWSCommandParamsTest):
     # Expected results: Operation is performed by client to update
     # the trust policy in expected format
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'iam.IAM.get_assume_role_policy'
+        'awscli.customizations.emrcontainers.iam.IAM.get_assume_role_policy'
     )
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_oidc_issuer_id'
+        'awscli.customizations.emrcontainers.eks.EKS.get_oidc_issuer_id'
     )
-    @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_account_id'
-    )
+    @mock.patch('awscli.customizations.emrcontainers.eks.EKS.get_account_id')
     def test_trust_policy_exists_with_more_keys(
         self,
         get_account_id_patch,
@@ -181,14 +177,12 @@ class TestUpdateAssumeRolePolicy(BaseAWSCommandParamsTest):
     # Expected results: Operation is performed by client to update
     # the trust policy in expected format
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'iam.IAM.get_assume_role_policy'
+        'awscli.customizations.emrcontainers.iam.IAM.get_assume_role_policy'
     )
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_oidc_issuer_id'
+        'awscli.customizations.emrcontainers.eks.EKS.get_oidc_issuer_id'
     )
-    @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_account_id'
-    )
+    @mock.patch('awscli.customizations.emrcontainers.eks.EKS.get_account_id')
     def test_policy_document_has_missing_key(
         self,
         get_account_id_patch,
@@ -213,14 +207,12 @@ class TestUpdateAssumeRolePolicy(BaseAWSCommandParamsTest):
     # Expected results: Operation is performed by client to update
     # the trust policy in expected format
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'iam.IAM.get_assume_role_policy'
+        'awscli.customizations.emrcontainers.iam.IAM.get_assume_role_policy'
     )
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_oidc_issuer_id'
+        'awscli.customizations.emrcontainers.eks.EKS.get_oidc_issuer_id'
     )
-    @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_account_id'
-    )
+    @mock.patch('awscli.customizations.emrcontainers.eks.EKS.get_account_id')
     def test_policy_document_has_empty_statements(
         self,
         get_account_id_patch,
@@ -245,14 +237,12 @@ class TestUpdateAssumeRolePolicy(BaseAWSCommandParamsTest):
     # Expected results: No operation is performed by client
     # The command should print the expected policy document to stdout
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'iam.IAM.get_assume_role_policy'
+        'awscli.customizations.emrcontainers.iam.IAM.get_assume_role_policy'
     )
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_oidc_issuer_id'
+        'awscli.customizations.emrcontainers.eks.EKS.get_oidc_issuer_id'
     )
-    @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_account_id'
-    )
+    @mock.patch('awscli.customizations.emrcontainers.eks.EKS.get_account_id')
     def test_trust_policy_does_not_exist_dry_run(
         self,
         get_account_id_patch,
@@ -273,14 +263,12 @@ class TestUpdateAssumeRolePolicy(BaseAWSCommandParamsTest):
     # Expected results: No operation is performed by client
     # The command should print that the trust policy statement already exists
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'iam.IAM.get_assume_role_policy'
+        'awscli.customizations.emrcontainers.iam.IAM.get_assume_role_policy'
     )
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_oidc_issuer_id'
+        'awscli.customizations.emrcontainers.eks.EKS.get_oidc_issuer_id'
     )
-    @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_account_id'
-    )
+    @mock.patch('awscli.customizations.emrcontainers.eks.EKS.get_account_id')
     def test_trust_policy_exists(
         self,
         get_account_id_patch,
@@ -303,14 +291,12 @@ class TestUpdateAssumeRolePolicy(BaseAWSCommandParamsTest):
     # Expected results: Operation is performed by client in cn-north-1
     # to update the trust policy in expected format
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'iam.IAM.get_assume_role_policy'
+        'awscli.customizations.emrcontainers.iam.IAM.get_assume_role_policy'
     )
     @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_oidc_issuer_id'
+        'awscli.customizations.emrcontainers.eks.EKS.get_oidc_issuer_id'
     )
-    @mock.patch(
-        'awscli.customizations.emrcontainers.' 'eks.EKS.get_account_id'
-    )
+    @mock.patch('awscli.customizations.emrcontainers.eks.EKS.get_account_id')
     def test_trust_policy_does_not_exist_in_cn(
         self,
         get_account_id_patch,

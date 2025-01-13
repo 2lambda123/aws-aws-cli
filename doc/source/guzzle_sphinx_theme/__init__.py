@@ -72,8 +72,7 @@ class HTMLTranslator(SphinxHTMLTranslator):
         )
         if name:
             title = (
-                f"<h3 class='admonition-title'>"
-                f"{admonitionlabels[name]}</h3>"
+                f"<h3 class='admonition-title'>{admonitionlabels[name]}</h3>"
             )
             self.body.append(title)
         self.set_first_last(node)

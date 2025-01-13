@@ -396,7 +396,7 @@ class TextTranslator(nodes.NodeVisitor):
     def visit_entry(self, node):
         if 'morerows' in node or 'morecols' in node:
             raise NotImplementedError(
-                'Column or row spanning cells are ' 'not implemented.'
+                'Column or row spanning cells are not implemented.'
             )
         self.new_state(0)
 

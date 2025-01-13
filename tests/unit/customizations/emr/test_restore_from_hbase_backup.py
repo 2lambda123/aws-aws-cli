@@ -55,7 +55,7 @@ class TestRestoreFromHBaseBackup(BaseAWSCommandParamsTest):
 
         self.assert_params_for_cmd(cmdline, result)
 
-    @mock.patch('awscli.customizations.emr.' 'emrutils.get_release_label')
+    @mock.patch('awscli.customizations.emr.emrutils.get_release_label')
     def test_unsupported_command_on_release_based_cluster_error(
         self, grl_patch
     ):

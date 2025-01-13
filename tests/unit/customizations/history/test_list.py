@@ -94,7 +94,7 @@ class TestTextFormatter(unittest.TestCase):
             ]
         )
         expected_output = (
-            'foo       %s s3 ls     0\n' 'bar       %s s3 cp     1\n'
+            'foo       %s s3 ls     0\nbar       %s s3 cp     1\n'
         ) % (self.formatted_time, self.formatted_time)
         actual_output = ensure_text_type(self.output_stream.getvalue())
         self.assertEqual(expected_output, actual_output)

@@ -43,7 +43,7 @@ def inject_commands(command_table, session, **kwargs):
 class CodeCommitNoOpStoreCommand(BasicCommand):
     NAME = 'store'
     DESCRIPTION = (
-        'This operation does nothing, credentials' ' are calculated each time'
+        'This operation does nothing, credentials are calculated each time'
     )
     SYNOPSIS = 'aws codecommit credential-helper store'
     EXAMPLES = ''
@@ -55,9 +55,7 @@ class CodeCommitNoOpStoreCommand(BasicCommand):
 
 class CodeCommitNoOpEraseCommand(BasicCommand):
     NAME = 'erase'
-    DESCRIPTION = (
-        'This operation does nothing, no credentials' ' are ever stored'
-    )
+    DESCRIPTION = 'This operation does nothing, no credentials are ever stored'
     SYNOPSIS = 'aws codecommit credential-helper erase'
     EXAMPLES = ''
     _UNDOCUMENTED = True

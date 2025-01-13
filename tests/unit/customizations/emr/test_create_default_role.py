@@ -73,8 +73,7 @@ CONSTRUCTED_RESULT_OUTPUT = [
 http_response = AWSResponse(None, 200, {}, None)
 
 CN_EC2_ROLE_ARN = (
-    'arn:aws-cn:iam::aws:policy/service-role/'
-    'AmazonElasticMapReduceforEC2Role'
+    'arn:aws-cn:iam::aws:policy/service-role/AmazonElasticMapReduceforEC2Role'
 )
 US_GOV_EC2_ROLE_ARN = (
     'arn:aws-us-gov:iam::aws:policy/service-role/'
@@ -82,19 +81,19 @@ US_GOV_EC2_ROLE_ARN = (
 )
 
 EC2_ROLE_ARN = (
-    'arn:aws:iam::aws:policy/service-role/' 'AmazonElasticMapReduceforEC2Role'
+    'arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceforEC2Role'
 )
 
 CN_EMR_ROLE_ARN = (
-    'arn:aws-cn:iam::aws:policy/service-role/' 'AmazonElasticMapReduceRole'
+    'arn:aws-cn:iam::aws:policy/service-role/AmazonElasticMapReduceRole'
 )
 
 US_GOV_EMR_ROLE_ARN = (
-    'arn:aws-us-gov:iam::aws:policy/' 'service-role/AmazonElasticMapReduceRole'
+    'arn:aws-us-gov:iam::aws:policy/service-role/AmazonElasticMapReduceRole'
 )
 
 EMR_ROLE_ARN = (
-    'arn:aws:iam::aws:policy/service-role/' 'AmazonElasticMapReduceRole'
+    'arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceRole'
 )
 
 CN_EMR_AUTOSCALING_ROLE_ARN = 'arn:aws-cn:iam::aws:policy/service-role/AmazonElasticMapReduceforAutoScalingRole'
@@ -196,18 +195,17 @@ class TestCreateDefaultRole(BaseAWSCommandParamsTest):
         )
 
     @mock.patch(
-        'awscli.customizations.emr.emr.' 'CreateDefaultRoles._construct_result'
+        'awscli.customizations.emr.emr.CreateDefaultRoles._construct_result'
     )
     @mock.patch(
         'awscli.customizations.emr.emr.'
         'CreateDefaultRoles.check_if_instance_profile_exists'
     )
     @mock.patch(
-        'awscli.customizations.emr.emr.'
-        'CreateDefaultRoles.check_if_role_exists'
+        'awscli.customizations.emr.emr.CreateDefaultRoles.check_if_role_exists'
     )
     @mock.patch(
-        'awscli.customizations.emr.emr.' 'CreateDefaultRoles._get_role_policy'
+        'awscli.customizations.emr.emr.CreateDefaultRoles._get_role_policy'
     )
     def test_default_autoscaling_role_commercial(
         self,
@@ -234,18 +232,17 @@ class TestCreateDefaultRole(BaseAWSCommandParamsTest):
         )
 
     @mock.patch(
-        'awscli.customizations.emr.emr.' 'CreateDefaultRoles._construct_result'
+        'awscli.customizations.emr.emr.CreateDefaultRoles._construct_result'
     )
     @mock.patch(
         'awscli.customizations.emr.emr.'
         'CreateDefaultRoles.check_if_instance_profile_exists'
     )
     @mock.patch(
-        'awscli.customizations.emr.emr.'
-        'CreateDefaultRoles.check_if_role_exists'
+        'awscli.customizations.emr.emr.CreateDefaultRoles.check_if_role_exists'
     )
     @mock.patch(
-        'awscli.customizations.emr.emr.' 'CreateDefaultRoles._get_role_policy'
+        'awscli.customizations.emr.emr.CreateDefaultRoles._get_role_policy'
     )
     def test_default_roles_not_exist(
         self,
@@ -339,21 +336,20 @@ class TestCreateDefaultRole(BaseAWSCommandParamsTest):
         )
 
     @mock.patch(
-        'awscli.customizations.emr.emr.' 'CreateDefaultRoles._construct_result'
+        'awscli.customizations.emr.emr.CreateDefaultRoles._construct_result'
     )
     @mock.patch(
-        'awscli.customizations.emr.createdefaultroles' '.get_service_principal'
+        'awscli.customizations.emr.createdefaultroles.get_service_principal'
     )
     @mock.patch(
         'awscli.customizations.emr.emr.'
         'CreateDefaultRoles.check_if_instance_profile_exists'
     )
     @mock.patch(
-        'awscli.customizations.emr.emr.'
-        'CreateDefaultRoles.check_if_role_exists'
+        'awscli.customizations.emr.emr.CreateDefaultRoles.check_if_role_exists'
     )
     @mock.patch(
-        'awscli.customizations.emr.emr.' 'CreateDefaultRoles._get_role_policy'
+        'awscli.customizations.emr.emr.CreateDefaultRoles._get_role_policy'
     )
     def test_get_service_principal_parameters(
         self,
@@ -396,7 +392,7 @@ class TestCreateDefaultRole(BaseAWSCommandParamsTest):
         self.assertEqual(call_patch.call_args[1]['endpoint_url'], endpoint_arg)
 
     @mock.patch(
-        'awscli.customizations.emr.emr.' 'CreateDefaultRoles._get_role_policy'
+        'awscli.customizations.emr.emr.CreateDefaultRoles._get_role_policy'
     )
     @mock.patch(
         'awscli.customizations.emr.emr.'
@@ -407,8 +403,7 @@ class TestCreateDefaultRole(BaseAWSCommandParamsTest):
         'CreateDefaultRoles.check_if_instance_profile_exists'
     )
     @mock.patch(
-        'awscli.customizations.emr.emr.'
-        'CreateDefaultRoles.check_if_role_exists'
+        'awscli.customizations.emr.emr.CreateDefaultRoles.check_if_role_exists'
     )
     def test_constructed_result(
         self,

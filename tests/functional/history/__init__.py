@@ -29,7 +29,7 @@ class BaseHistoryCommandParamsTest(BaseAWSCommandParamsTest):
         super(BaseHistoryCommandParamsTest, self).setUp()
         self.history_recorder = history_recorder
         self.files = FileCreator()
-        config_contents = '[default]\n' 'cli_history = enabled'
+        config_contents = '[default]\ncli_history = enabled'
         self.environ['AWS_CONFIG_FILE'] = self.files.create_file(
             'config', config_contents
         )

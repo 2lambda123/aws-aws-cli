@@ -341,7 +341,7 @@ class TestDetailedFormatter(unittest.TestCase):
                 },
                 'timestamp': 86400000,
             },
-            contains=['with body: {\n' '    "foo": "bar"\n' '}'],
+            contains=['with body: {\n    "foo": "bar"\n}'],
         )
 
     def test_shares_api_number_across_events_of_same_api_call(self):

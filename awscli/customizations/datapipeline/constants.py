@@ -19,12 +19,10 @@ DATAPIPELINE_DEFAULT_RESOURCE_ROLE_NAME = "DataPipelineDefaultResourceRole"
 
 # DataPipeline role arn names
 DATAPIPELINE_DEFAULT_SERVICE_ROLE_ARN = (
-    "arn:aws:iam::aws:policy/" "service-role/AWSDataPipelineRole"
+    "arn:aws:iam::aws:policy/service-role/AWSDataPipelineRole"
 )
 DATAPIPELINE_DEFAULT_RESOURCE_ROLE_ARN = (
-    "arn:aws:iam::aws:policy/"
-    "service-role/"
-    "AmazonEC2RoleforDataPipelineRole"
+    "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforDataPipelineRole"
 )
 
 # Assume Role Policy definitions for roles

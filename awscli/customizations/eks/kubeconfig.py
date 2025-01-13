@@ -97,7 +97,7 @@ class KubeconfigValidator:
         """
         if not isinstance(config, Kubeconfig):
             raise KubeconfigCorruptedError(
-                "Internal error: " f"Not a {Kubeconfig}."
+                f"Internal error: Not a {Kubeconfig}."
             )
         self._validate_config_types(config)
         self._validate_list_entry_types(config)

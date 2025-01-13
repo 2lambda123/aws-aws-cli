@@ -33,9 +33,7 @@ TRUST_POLICY_STATEMENT_FORMAT = (
 )
 
 TRUST_POLICY_STATEMENT_ALREADY_EXISTS = (
-    "Trust policy statement already "
-    "exists for role %s. No changes "
-    "were made!"
+    "Trust policy statement already exists for role %s. No changes were made!"
 )
 
 TRUST_POLICY_UPDATE_SUCCESSFUL = "Successfully updated trust policy of role %s"

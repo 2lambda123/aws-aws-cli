@@ -163,8 +163,7 @@ INSTALL_HBASE_STEP = {
 INSTALL_GANGLIA_BA = {
     'ScriptBootstrapAction': {
         'Path': (
-            's3://us-east-1.elasticmapreduce/'
-            'bootstrap-actions/install-ganglia'
+            's3://us-east-1.elasticmapreduce/bootstrap-actions/install-ganglia'
         )
     },
     'Name': 'Install Ganglia',
@@ -298,7 +297,7 @@ PIG_DEFAULT_STEP = {
             'latest',
             '--args',
             '-f',
-            's3://elasticmapreduce/samples/' 'pig-apache/do-reports2.pig',
+            's3://elasticmapreduce/samples/pig-apache/do-reports2.pig',
         ],
     },
 }
@@ -318,7 +317,7 @@ PIG_BASIC_STEP = {
             'latest',
             '--args',
             '-f',
-            's3://elasticmapreduce/samples/' 'pig-apache/do-reports2.pig',
+            's3://elasticmapreduce/samples/pig-apache/do-reports2.pig',
         ],
     },
 }
@@ -625,7 +624,7 @@ class TestCreateCluster(BaseAWSCommandParamsTest):
         self.assert_params_for_cmd(cmd, result)
 
         cmd = DEFAULT_CMD + (
-            '--log-uri s3://test/logs --enable-debugging ' '--region us-west-2'
+            '--log-uri s3://test/logs --enable-debugging --region us-west-2'
         )
         debugging_config = [
             {
@@ -1395,7 +1394,7 @@ class TestCreateCluster(BaseAWSCommandParamsTest):
     def test_empty_step_args(self):
         cmd = DEFAULT_CMD + '--steps Type=Streaming,Args= '
         expect_error_msg = (
-            '\naws: error: The prameter Args cannot ' 'be an empty list.\n'
+            '\naws: error: The prameter Args cannot be an empty list.\n'
         )
         result = self.run_cmd(cmd, 255)
         self.assertEqual(expect_error_msg, result[1])

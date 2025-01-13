@@ -83,7 +83,7 @@ class TestCreateDefaultRole(BaseAWSCommandParamsTest):
     # attaching policy to role
     # create-default-role is executed without any resource type parameter,
     # should default to snapshot
-    @mock.patch('awscli.customizations.dlm.' 'iam.IAM.check_if_role_exists')
+    @mock.patch('awscli.customizations.dlm.iam.IAM.check_if_role_exists')
     def test_default_role_not_exist(self, role_exists_patch):
         role_exists_patch.return_value = False
 
@@ -143,7 +143,7 @@ class TestCreateDefaultRole(BaseAWSCommandParamsTest):
     # existence of policy, creation of role and then
     # attaching policy to role
     # create-default-role is executed resource type = snapshot
-    @mock.patch('awscli.customizations.dlm.' 'iam.IAM.check_if_role_exists')
+    @mock.patch('awscli.customizations.dlm.iam.IAM.check_if_role_exists')
     def test_default_role_not_exist_snapshot(self, role_exists_patch):
         role_exists_patch.return_value = False
 
@@ -206,7 +206,7 @@ class TestCreateDefaultRole(BaseAWSCommandParamsTest):
     # existence of policy, creation of role and then
     # attaching policy to role
     # create-default-role is executed with resource type = image
-    @mock.patch('awscli.customizations.dlm.' 'iam.IAM.check_if_role_exists')
+    @mock.patch('awscli.customizations.dlm.iam.IAM.check_if_role_exists')
     def test_default_role_not_exist_ami(self, role_exists_patch):
         role_exists_patch.return_value = False
 

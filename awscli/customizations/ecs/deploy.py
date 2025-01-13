@@ -120,9 +120,7 @@ class ECSDeploy(BasicCommand):
 
     MSG_CREATED_DEPLOYMENT = "Successfully created deployment {id}\n"
 
-    MSG_SUCCESS = (
-        "Successfully deployed {task_def} to " "service '{service}'\n"
-    )
+    MSG_SUCCESS = "Successfully deployed {task_def} to service '{service}'\n"
 
     USER_AGENT_EXTRA = 'customization/ecs-deploy'
 

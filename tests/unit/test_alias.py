@@ -100,9 +100,7 @@ class TestAliasLoader(unittest.TestCase):
 
     def test_get_aliases_with_multiple_lines(self):
         with open(self.alias_file, 'a+') as f:
-            f.write(
-                'my-alias = \n' '  my-alias-value \\ \n' '  --parameter foo\n'
-            )
+            f.write('my-alias = \n  my-alias-value \\ \n  --parameter foo\n')
         alias_interface = AliasLoader(self.alias_file)
         self.assertEqual(
             alias_interface.get_aliases(),
@@ -450,7 +448,7 @@ class TestServiceAliasCommand(unittest.TestCase):
         )
 
     def test_properly_parses_aliases_broken_by_multiple_lines(self):
-        alias_value = 'myservice myoperation \\' '\n--my-parameter val'
+        alias_value = 'myservice myoperation \\\n--my-parameter val'
 
         command_table = self.create_command_table(['myservice'])
         parser = self.create_parser(command_table)
@@ -564,7 +562,7 @@ class TestExternalAliasCommand(unittest.TestCase):
         )
 
     def test_external_command_uses_literal_alias_value(self):
-        alias_value = '!f () {\n' '  ls .\n' '}; f'
+        alias_value = '!f () {\n  ls .\n}; f'
         alias_cmd = ExternalAliasCommand(
             'alias-name', alias_value, invoker=self.subprocess_call
         )

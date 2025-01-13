@@ -220,8 +220,7 @@ class DigestSignatureError(DigestError):
 
     def __init__(self, bucket, key):
         message = (
-            'Digest file\ts3://%s/%s\tINVALID: signature verification '
-            'failed'
+            'Digest file\ts3://%s/%s\tINVALID: signature verification failed'
         ) % (bucket, key)
         super(DigestSignatureError, self).__init__(message)
 

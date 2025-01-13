@@ -106,15 +106,7 @@ class TestConfigFileWriter(unittest.TestCase):
 
     def test_insert_new_value_in_middle_section(self):
         original_contents = (
-            '[a]\n'
-            'foo = bar\n'
-            '\n'
-            '[b]\n'
-            '\n'
-            'foo = bar\n'
-            '\n'
-            '[c]\n'
-            'foo = bar\n'
+            '[a]\nfoo = bar\n\n[b]\n\nfoo = bar\n\n[c]\nfoo = bar\n'
         )
         expected_contents = (
             '[a]\n'
@@ -151,7 +143,7 @@ class TestConfigFileWriter(unittest.TestCase):
             '\n'
             'foo = bar\n'
         )
-        appended_contents = '[default]\n' 'foo = value\n'
+        appended_contents = '[default]\nfoo = value\n'
         self.assert_update_config(
             original_contents,
             {'foo': 'value'},
@@ -172,55 +164,51 @@ class TestConfigFileWriter(unittest.TestCase):
         self.assertEqual(os.stat(self.config_filename).st_mode & 0xFFF, 0o600)
 
     def test_update_config_with_comments(self):
-        original = '[default]\n' '#foo = 1\n' 'bar = 1\n'
+        original = '[default]\n#foo = 1\nbar = 1\n'
         self.assert_update_config(
             original,
             {'foo': 'newvalue'},
-            '[default]\n' '#foo = 1\n' 'bar = 1\n' 'foo = newvalue\n',
+            '[default]\n#foo = 1\nbar = 1\nfoo = newvalue\n',
         )
 
     def test_update_config_with_commented_section(self):
-        original = '#[default]\n' '[default]\n' '#foo = 1\n' 'bar = 1\n'
+        original = '#[default]\n[default]\n#foo = 1\nbar = 1\n'
         self.assert_update_config(
             original,
             {'foo': 'newvalue'},
-            '#[default]\n'
-            '[default]\n'
-            '#foo = 1\n'
-            'bar = 1\n'
-            'foo = newvalue\n',
+            '#[default]\n[default]\n#foo = 1\nbar = 1\nfoo = newvalue\n',
         )
 
     def test_spaces_around_key_names(self):
-        original = '[default]\n' 'foo = 1\n' 'bar = 1\n'
+        original = '[default]\nfoo = 1\nbar = 1\n'
         self.assert_update_config(
             original,
             {'foo': 'newvalue'},
-            '[default]\n' 'foo = newvalue\n' 'bar = 1\n',
+            '[default]\nfoo = newvalue\nbar = 1\n',
         )
 
     def test_unquoted_profile_name(self):
-        original = '[profile foobar]\n' 'foo = 1\n' 'bar = 1\n'
+        original = '[profile foobar]\nfoo = 1\nbar = 1\n'
         self.assert_update_config(
             original,
             {'foo': 'newvalue', '__section__': 'profile foobar'},
-            '[profile foobar]\n' 'foo = newvalue\n' 'bar = 1\n',
+            '[profile foobar]\nfoo = newvalue\nbar = 1\n',
         )
 
     def test_double_quoted_profile_name(self):
-        original = '[profile "foobar"]\n' 'foo = 1\n' 'bar = 1\n'
+        original = '[profile "foobar"]\nfoo = 1\nbar = 1\n'
         self.assert_update_config(
             original,
             {'foo': 'newvalue', '__section__': 'profile foobar'},
-            '[profile "foobar"]\n' 'foo = newvalue\n' 'bar = 1\n',
+            '[profile "foobar"]\nfoo = newvalue\nbar = 1\n',
         )
 
     def test_profile_with_multiple_spaces(self):
-        original = '[profile "two  spaces"]\n' 'foo = 1\n' 'bar = 1\n'
+        original = '[profile "two  spaces"]\nfoo = 1\nbar = 1\n'
         self.assert_update_config(
             original,
             {'foo': 'newvalue', '__section__': 'profile two  spaces'},
-            '[profile "two  spaces"]\n' 'foo = newvalue\n' 'bar = 1\n',
+            '[profile "two  spaces"]\nfoo = newvalue\nbar = 1\n',
         )
 
     def test_nested_attributes_new_file(self):
@@ -228,11 +216,11 @@ class TestConfigFileWriter(unittest.TestCase):
         self.assert_update_config(
             original,
             {'__section__': 'default', 's3': {'signature_version': 's3v4'}},
-            '[default]\n' 's3 =\n' '    signature_version = s3v4\n',
+            '[default]\ns3 =\n    signature_version = s3v4\n',
         )
 
     def test_add_to_nested_with_nested_in_the_middle(self):
-        original = '[default]\n' 's3 =\n' '    other = foo\n' 'ec2 = bar\n'
+        original = '[default]\ns3 =\n    other = foo\nec2 = bar\n'
         self.assert_update_config(
             original,
             {'__section__': 'default', 's3': {'signature_version': 'newval'}},
@@ -244,7 +232,7 @@ class TestConfigFileWriter(unittest.TestCase):
         )
 
     def test_add_to_nested_with_nested_in_the_end(self):
-        original = '[default]\n' 's3 =\n' '    other = foo\n'
+        original = '[default]\ns3 =\n    other = foo\n'
         self.assert_update_config(
             original,
             {'__section__': 'default', 's3': {'signature_version': 'newval'}},
@@ -255,22 +243,16 @@ class TestConfigFileWriter(unittest.TestCase):
         )
 
     def test_update_nested_attribute(self):
-        original = (
-            '[default]\n' 's3 =\n' '    signature_version = originalval\n'
-        )
+        original = '[default]\ns3 =\n    signature_version = originalval\n'
         self.assert_update_config(
             original,
             {'__section__': 'default', 's3': {'signature_version': 'newval'}},
-            '[default]\n' 's3 =\n' '    signature_version = newval\n',
+            '[default]\ns3 =\n    signature_version = newval\n',
         )
 
     def test_updated_nested_attribute_new_section(self):
         original = (
-            '[default]\n'
-            's3 =\n'
-            '    other = foo\n'
-            '[profile foo]\n'
-            'foo = bar\n'
+            '[default]\ns3 =\n    other = foo\n[profile foo]\nfoo = bar\n'
         )
         self.assert_update_config(
             original,
@@ -284,7 +266,7 @@ class TestConfigFileWriter(unittest.TestCase):
         )
 
     def test_update_nested_attr_no_prior_nesting(self):
-        original = '[default]\n' 'foo = bar\n' '[profile foo]\n' 'foo = bar\n'
+        original = '[default]\nfoo = bar\n[profile foo]\nfoo = bar\n'
         self.assert_update_config(
             original,
             {'__section__': 'default', 's3': {'signature_version': 'newval'}},
@@ -297,18 +279,15 @@ class TestConfigFileWriter(unittest.TestCase):
         )
 
     def test_can_handle_empty_section(self):
-        original = '[default]\n' '[preview]\n' 'cloudfront = true\n'
+        original = '[default]\n[preview]\ncloudfront = true\n'
         self.assert_update_config(
             original,
             {'region': 'us-west-2', '__section__': 'default'},
-            '[default]\n'
-            'region = us-west-2\n'
-            '[preview]\n'
-            'cloudfront = true\n',
+            '[default]\nregion = us-west-2\n[preview]\ncloudfront = true\n',
         )
 
     def test_appends_newline_on_new_section(self):
-        original = '[preview]\n' 'cloudfront = true'
+        original = '[preview]\ncloudfront = true'
         self.assert_update_config(
             original,
             {'region': 'us-west-2', '__section__': 'new-section'},

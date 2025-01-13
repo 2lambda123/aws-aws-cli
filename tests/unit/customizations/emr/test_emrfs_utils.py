@@ -40,7 +40,7 @@ DEFAULT_INSTANCES = {
 }
 
 DEFAULT_CMD = (
-    'emr create-cluster --use-default-roles' ' --instance-type m1.large '
+    'emr create-cluster --use-default-roles --instance-type m1.large '
 )
 DEFAULT_RESULT = {
     'Name': "Development Cluster",
@@ -143,7 +143,7 @@ class TestEmrfsUtils(BaseAWSCommandParamsTest):
 
     def test_cse_kms(self):
         emrfs_option_value = (
-            'Encryption=ClientSide,ProviderType=KMS,' 'KMSKeyId=my_key'
+            'Encryption=ClientSide,ProviderType=KMS,KMSKeyId=my_key'
         )
         expected_emrfs_ba_key_values = [
             'fs.s3.cse.enabled=true',
@@ -170,7 +170,7 @@ class TestEmrfsUtils(BaseAWSCommandParamsTest):
         )
         expected_emrfs_ba_key_values = [
             'fs.s3.cse.enabled=true',
-            'fs.s3.cse.encryptionMaterialsProvider=' 'my_class',
+            'fs.s3.cse.encryptionMaterialsProvider=my_class',
         ]
         expected_emrfs_properties = {
             'fs.s3.cse.enabled': 'true',
@@ -380,7 +380,7 @@ class TestEmrfsUtils(BaseAWSCommandParamsTest):
             exception_class_name='MissingParametersError',
             error_msg_kwargs={
                 'object_name': CSE_CUSTOM_OPTION_NAME,
-                'missing': 'CustomProviderClass and ' 'CustomProviderLocation',
+                'missing': 'CustomProviderClass and CustomProviderLocation',
             },
         )
 

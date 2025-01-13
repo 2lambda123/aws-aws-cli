@@ -267,7 +267,7 @@ class TestSwiftLogin(unittest.TestCase):
         existing_content = 'machine host login user password 1234'
 
         expected_content = (
-            f'machine host login user password 1234\n' f'{self.new_entry}\n'
+            f'machine host login user password 1234\n{self.new_entry}\n'
         )
         with open(self.test_netrc_path, 'w+') as f:
             f.write(existing_content)
@@ -281,7 +281,7 @@ class TestSwiftLogin(unittest.TestCase):
         existing_content = 'machine host login user password 1234\n'
 
         expected_content = (
-            f'machine host login user password 1234\n' f'{self.new_entry}\n'
+            f'machine host login user password 1234\n{self.new_entry}\n'
         )
         with open(self.test_netrc_path, 'w+') as f:
             f.write(existing_content)
@@ -323,7 +323,7 @@ class TestSwiftLogin(unittest.TestCase):
             f'machine {self.hostname} login token password expired-auth-token-1\n'
             f'machine {self.hostname} login token password expired-auth-token-2\n'
         )
-        expected_content = f'{self.new_entry}\n' f'{self.new_entry}\n'
+        expected_content = f'{self.new_entry}\n{self.new_entry}\n'
         with open(self.test_netrc_path, 'w+') as f:
             f.write(existing_content)
 

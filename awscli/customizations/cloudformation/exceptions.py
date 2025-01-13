@@ -40,7 +40,7 @@ class ExportFailedError(CloudFormationCommandError):
 
 
 class InvalidKeyValuePairArgumentError(CloudFormationCommandError):
-    fmt = "{value} value passed to --{argname} must be of format " "Key=Value"
+    fmt = "{value} value passed to --{argname} must be of format Key=Value"
 
 
 class DeployFailedError(CloudFormationCommandError):

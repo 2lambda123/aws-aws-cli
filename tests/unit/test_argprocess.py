@@ -601,8 +601,7 @@ class TestDocGen(BaseArgProcessTest):
     def test_gen_map_type_docs(self):
         argument = self.get_param_model('sqs.SetQueueAttributes.Attributes')
         expected_example_str = (
-            "KeyName1=string,KeyName2=string\n\n"
-            "Where valid key names are:\n"
+            "KeyName1=string,KeyName2=string\n\nWhere valid key names are:\n"
         )
         self.assert_generated_example_contains(argument, expected_example_str)
 
@@ -684,9 +683,7 @@ class TestDocGen(BaseArgProcessTest):
         self.assertIn('SSLCertificateId=string', generated_example)
 
     def test_gen_list_structure_multiple_scalar_docs(self):
-        expected = (
-            'Scalar1=string,' 'Scalar2=string,' 'List1=string,string ...'
-        )
+        expected = 'Scalar1=string,Scalar2=string,List1=string,string ...'
         m = (
             model.DenormalizedStructureBuilder()
             .with_members(

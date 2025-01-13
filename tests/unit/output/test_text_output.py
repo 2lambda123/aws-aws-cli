@@ -83,7 +83,7 @@ class TestDescribeChangesets(BaseAWSCommandParamsTest):
             'NotificationARNs': [],
             'RollbackConfiguration': {'RollbackTriggers': []},
             'StackId': (
-                'arn:aws:cloudformation:us-west-2:12345:stack' '/MyStack/12345'
+                'arn:aws:cloudformation:us-west-2:12345:stack/MyStack/12345'
             ),
             'StackName': 'MyStack',
             'Status': 'CREATE_COMPLETE',
@@ -102,7 +102,7 @@ class TestDescribeChangesets(BaseAWSCommandParamsTest):
             'NotificationARNs': [],
             'RollbackConfiguration': {'RollbackTriggers': []},
             'StackId': (
-                'arn:aws:cloudformation:us-west-2:12345:stack' '/MyStack/12345'
+                'arn:aws:cloudformation:us-west-2:12345:stack/MyStack/12345'
             ),
             'StackName': 'MyStack',
             'Status': 'CREATE_COMPLETE',

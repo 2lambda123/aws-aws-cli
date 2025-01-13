@@ -25,7 +25,7 @@ class TestAPIVersions(BaseAWSCommandParamsTest):
         # multiple api versions.
         self.service_name = 'ec2'
         self.api_version = '2014-10-01'
-        config_contents = '[default]\n' 'api_versions =\n' '    %s = %s\n' % (
+        config_contents = '[default]\napi_versions =\n    %s = %s\n' % (
             self.service_name,
             self.api_version,
         )

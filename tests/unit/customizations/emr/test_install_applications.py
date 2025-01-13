@@ -80,7 +80,7 @@ INSTALL_PIG_STEP = {
 
 class TestInstallApplications(BaseAWSCommandParamsTest):
     prefix = (
-        'emr install-applications --cluster-id ' 'j-ABC123456 --applications '
+        'emr install-applications --cluster-id j-ABC123456 --applications '
     )
 
     def test_install_hive_site(self):
@@ -138,7 +138,7 @@ class TestInstallApplications(BaseAWSCommandParamsTest):
         result = self.run_cmd(cmdline, 255)
         self.assertEqual(result[1], expected_error_msg)
 
-    @mock.patch('awscli.customizations.emr.' 'emrutils.get_release_label')
+    @mock.patch('awscli.customizations.emr.emrutils.get_release_label')
     def test_unsupported_command_on_release_based_cluster_error(
         self, grl_patch
     ):
