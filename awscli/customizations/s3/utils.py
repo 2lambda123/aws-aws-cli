@@ -354,8 +354,7 @@ def guess_content_type(filename):
     # default guessed content type of None.
     except UnicodeDecodeError:
         LOGGER.debug(
-            'Unable to guess content type for %s due to '
-            'UnicodeDecodeError: ',
+            'Unable to guess content type for %s due to UnicodeDecodeError: ',
             filename,
             exc_info=True,
         )
@@ -600,7 +599,7 @@ class RequestParamsMapper:
                     permission, grantee = grant.split('=', 1)
                 except ValueError:
                     raise ValueError(
-                        'grants should be of the form ' 'permission=principal'
+                        'grants should be of the form permission=principal'
                     )
                 request_params[cls._permission_to_param(permission)] = grantee
 
@@ -615,7 +614,7 @@ class RequestParamsMapper:
         if permission == 'writeacl':
             return 'GrantWriteACP'
         raise ValueError(
-            'permission must be one of: ' 'read|readacl|writeacl|full'
+            'permission must be one of: read|readacl|writeacl|full'
         )
 
     @classmethod

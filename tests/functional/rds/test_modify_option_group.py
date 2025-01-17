@@ -24,8 +24,7 @@ class TestAddOptionGroup(BaseAWSCommandParamsTest):
 
     def test_add_option(self):
         args = (
-            '--option-group-name myoptiongroup2 '
-            '--options {"OptionName":"TDE"}'
+            '--option-group-name myoptiongroup2 --options {"OptionName":"TDE"}'
         )
         cmdline = self.prefix + args
         result = {
@@ -35,7 +34,7 @@ class TestAddOptionGroup(BaseAWSCommandParamsTest):
         self.assert_params_for_cmd(cmdline, result)
 
     def test_option_to_remove_is_not_allowed(self):
-        args = '--option-group-name myoptiongroup2 ' '--options-to-remove foo'
+        args = '--option-group-name myoptiongroup2 --options-to-remove foo'
         cmdline = self.prefix + args
         self.assert_params_for_cmd(
             cmdline,
@@ -48,7 +47,7 @@ class TestRemoveOptionGroup(BaseAWSCommandParamsTest):
     prefix = 'rds remove-option-from-option-group '
 
     def test_remove_options(self):
-        args = '--option-group-name myoptiongroup2 ' '--options TDE'
+        args = '--option-group-name myoptiongroup2 --options TDE'
         cmdline = self.prefix + args
         result = {
             'OptionsToRemove': ['TDE'],

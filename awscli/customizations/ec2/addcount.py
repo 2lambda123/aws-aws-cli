@@ -98,7 +98,6 @@ class CountArgument(BaseCLIArgument):
             parameters['MaxCount'] = int(maxstr)
         except:
             msg = (
-                'count parameter should be of '
-                'form min[:max] (e.g. 1 or 1:10)'
+                'count parameter should be of form min[:max] (e.g. 1 or 1:10)'
             )
             raise ValueError(msg)

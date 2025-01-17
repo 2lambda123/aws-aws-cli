@@ -211,7 +211,7 @@ class TestSSHBasedCommands(BaseAWSCommandParamsTest):
         self,
         mock_run_main_command,
         cmd,
-        key_pair_file_to_assert='' '/home/my_default_key_pair.pem',
+        key_pair_file_to_assert='/home/my_default_key_pair.pem',
     ):
         self.set_configs(DEFAULT_CONFIGS)
         mock_run_main_command.return_value = 0

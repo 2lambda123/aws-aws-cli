@@ -122,7 +122,7 @@ class Register(BasicCommand):
             Path='/AWS/CodeDeploy/', UserName=params.user_name
         )
         params.iam_user_arn = response['User']['Arn']
-        sys.stdout.write('DONE\n' f'IamUserArn: {params.iam_user_arn}\n')
+        sys.stdout.write(f'DONE\nIamUserArn: {params.iam_user_arn}\n')
 
     def _create_access_key(self, params):
         sys.stdout.write('Creating the IAM user access key... ')

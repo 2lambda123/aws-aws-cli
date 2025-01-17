@@ -21,7 +21,7 @@ class TestShow(unittest.TestCase):
         self.files = FileCreator()
         self.environ = os.environ.copy()
         self.environ['AWS_CONFIG_FILE'] = self.files.create_file(
-            'config', ('[default]\n' 'cli_history = enabled')
+            'config', ('[default]\ncli_history = enabled')
         )
         self.environ['AWS_DEFAULT_PROFILE'] = 'default'
         self.environ['AWS_DEFAULT_REGION'] = 'us-west-2'

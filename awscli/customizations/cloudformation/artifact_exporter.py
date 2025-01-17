@@ -94,7 +94,7 @@ def parse_s3_url(
             return result
 
     raise ValueError(
-        "URL given to the parse method is not a valid S3 url " f"{url}"
+        f"URL given to the parse method is not a valid S3 url {url}"
     )
 
 

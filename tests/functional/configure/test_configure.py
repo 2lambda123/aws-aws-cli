@@ -147,7 +147,7 @@ class TestConfigureCommand(BaseAWSCommandParamsTest):
     def test_set_with_config_file_no_exist(self):
         self.run_cmd("configure set region us-west-1")
         self.assertEqual(
-            "[default]\n" "region = us-west-1\n",
+            "[default]\nregion = us-west-1\n",
             self.get_config_file_contents(),
         )
 
@@ -156,7 +156,7 @@ class TestConfigureCommand(BaseAWSCommandParamsTest):
             "configure set endpoint http://www.example.com",
         )
         self.assertEqual(
-            "[default]\n" "endpoint = http://www.example.com\n",
+            "[default]\nendpoint = http://www.example.com\n",
             self.get_config_file_contents(),
         )
 
@@ -166,15 +166,15 @@ class TestConfigureCommand(BaseAWSCommandParamsTest):
 
         self.run_cmd("configure set region us-west-1")
         self.assertEqual(
-            "[default]\n" "region = us-west-1\n",
+            "[default]\nregion = us-west-1\n",
             self.get_config_file_contents(),
         )
 
     def test_set_with_updating_value(self):
-        self.set_config_file_contents("[default]\n" "region = us-west-2\n")
+        self.set_config_file_contents("[default]\nregion = us-west-2\n")
         self.run_cmd("configure set region us-west-1")
         self.assertEqual(
-            "[default]\n" "region = us-west-1\n",
+            "[default]\nregion = us-west-1\n",
             self.get_config_file_contents(),
         )
 
@@ -190,7 +190,7 @@ class TestConfigureCommand(BaseAWSCommandParamsTest):
             ]
         )
         self.assertEqual(
-            "[profile 'test with spaces']\n" "region = us-west-1\n",
+            "[profile 'test with spaces']\nregion = us-west-1\n",
             self.get_config_file_contents(),
         )
 
@@ -206,7 +206,7 @@ class TestConfigureCommand(BaseAWSCommandParamsTest):
             ]
         )
         self.assertEqual(
-            "[profile 'space test']\n" "un =\n" "    known = us-west-1\n",
+            "[profile 'space test']\nun =\n    known = us-west-1\n",
             self.get_config_file_contents(),
         )
 
@@ -220,7 +220,7 @@ class TestConfigureCommand(BaseAWSCommandParamsTest):
             ]
         )
         self.assertEqual(
-            "[profile 'test with spaces']\n" "region = us-west-1\n",
+            "[profile 'test with spaces']\nregion = us-west-1\n",
             self.get_config_file_contents(),
         )
 
@@ -229,14 +229,14 @@ class TestConfigureCommand(BaseAWSCommandParamsTest):
             "configure set region us-west-1 --profile testing",
         )
         self.assertEqual(
-            "[profile testing]\n" "region = us-west-1\n",
+            "[profile testing]\nregion = us-west-1\n",
             self.get_config_file_contents(),
         )
 
     def test_set_with_fq_single_dot(self):
         self.run_cmd("configure set preview.cloudsearch true")
         self.assertEqual(
-            "[preview]\n" "cloudsearch = true\n",
+            "[preview]\ncloudsearch = true\n",
             self.get_config_file_contents(),
         )
 
@@ -245,18 +245,15 @@ class TestConfigureCommand(BaseAWSCommandParamsTest):
             "configure set profile.testing.region us-west-2",
         )
         self.assertEqual(
-            "[profile testing]\n" "region = us-west-2\n",
+            "[profile testing]\nregion = us-west-2\n",
             self.get_config_file_contents(),
         )
 
     def test_set_with_commented_out_field(self):
-        self.set_config_file_contents("#[preview]\n" ";cloudsearch = true\n")
+        self.set_config_file_contents("#[preview]\n;cloudsearch = true\n")
         self.run_cmd("configure set preview.cloudsearch true")
         self.assertEqual(
-            "#[preview]\n"
-            ";cloudsearch = true\n"
-            "[preview]\n"
-            "cloudsearch = true\n",
+            "#[preview]\n;cloudsearch = true\n[preview]\ncloudsearch = true\n",
             self.get_config_file_contents(),
         )
 
@@ -265,7 +262,7 @@ class TestConfigureCommand(BaseAWSCommandParamsTest):
             "configure set default.s3.signature_version s3v4",
         )
         self.assertEqual(
-            "[default]\n" "s3 =\n" "    signature_version = s3v4\n",
+            "[default]\ns3 =\n    signature_version = s3v4\n",
             self.get_config_file_contents(),
         )
 
@@ -291,7 +288,7 @@ class TestConfigureCommand(BaseAWSCommandParamsTest):
 
     def test_set_with_new_profile(self):
         self.set_config_file_contents(
-            "[default]\n" "s3 =\n" "    signature_version = s3v4\n"
+            "[default]\ns3 =\n    signature_version = s3v4\n"
         )
         self.run_cmd(
             "configure set profile.dev.s3.signature_version s3v4",
@@ -308,19 +305,19 @@ class TestConfigureCommand(BaseAWSCommandParamsTest):
 
     def test_override_existing_value(self):
         self.set_config_file_contents(
-            "[default]\n" "s3 =\n" "    signature_version = v4\n"
+            "[default]\ns3 =\n    signature_version = v4\n"
         )
         self.run_cmd(
             "configure set default.s3.signature_version NEWVALUE",
         )
         self.assertEqual(
-            "[default]\n" "s3 =\n" "    signature_version = NEWVALUE\n",
+            "[default]\ns3 =\n    signature_version = NEWVALUE\n",
             self.get_config_file_contents(),
         )
 
     def test_get_nested_attribute(self):
         self.set_config_file_contents(
-            "[default]\n" "s3 =\n" "    signature_version = v4\n"
+            "[default]\ns3 =\n    signature_version = v4\n"
         )
         stdout, _, _ = self.run_cmd(
             "configure get default.s3.signature_version"
@@ -341,10 +338,7 @@ class TestConfigureCommand(BaseAWSCommandParamsTest):
             "configure set region us-west-2",
         )
         self.assertEqual(
-            "[default]\n"
-            "region = us-west-2\n"
-            "[preview]\n"
-            "cloudfront = true\n",
+            "[default]\nregion = us-west-2\n[preview]\ncloudfront = true\n",
             self.get_config_file_contents(),
         )
 

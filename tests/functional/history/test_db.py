@@ -428,8 +428,7 @@ class TestDatabaseHistoryHandler(unittest.TestCase):
         # from the api call will have been b64 encoded.
         payload = {
             'url': (
-                'https://lambda.us-west-2.amazonaws.com/2015-03-31/'
-                'functions'
+                'https://lambda.us-west-2.amazonaws.com/2015-03-31/functions'
             ),
             'method': 'POST',
             'headers': CaseInsensitiveDict({'foo': 'bar'}),

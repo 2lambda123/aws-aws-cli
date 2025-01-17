@@ -65,7 +65,7 @@ EMRFS_CSE_ENCRYPTION_MATERIALS_PROVIDER_KEY = (
 EMRFS_CSE_CUSTOM_PROVIDER_URI_KEY = 'fs.s3.cse.encryptionMaterialsProvider.uri'
 
 EMRFS_CSE_KMS_PROVIDER_FULL_CLASS_NAME = (
-    'com.amazon.ws.emr.hadoop.fs.cse.' 'KMSEncryptionMaterialsProvider'
+    'com.amazon.ws.emr.hadoop.fs.cse.KMSEncryptionMaterialsProvider'
 )
 EMRFS_CSE_CUSTOM_S3_GET_BA_PATH = 'file:/usr/share/aws/emr/scripts/s3get'
 EMRFS_CUSTOM_DEST_PATH = '/usr/share/aws/emr/auxlib'

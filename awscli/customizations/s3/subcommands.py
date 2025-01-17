@@ -71,7 +71,7 @@ SUMMARIZE = {
     'name': 'summarize',
     'action': 'store_true',
     'help_text': (
-        "Displays summary information " "(number of objects, total size)."
+        "Displays summary information (number of objects, total size)."
     ),
 }
 
@@ -90,8 +90,7 @@ QUIET = {
     'name': 'quiet',
     'action': 'store_true',
     'help_text': (
-        "Does not display the operations performed from the specified "
-        "command."
+        "Does not display the operations performed from the specified command."
     ),
 }
 
@@ -363,15 +362,13 @@ WEBSITE_REDIRECT = {
 
 CACHE_CONTROL = {
     'name': 'cache-control',
-    'help_text': (
-        "Specifies caching behavior along the " "request/reply chain."
-    ),
+    'help_text': ("Specifies caching behavior along the request/reply chain."),
 }
 
 
 CONTENT_DISPOSITION = {
     'name': 'content-disposition',
-    'help_text': ("Specifies presentational information " "for the object."),
+    'help_text': ("Specifies presentational information for the object."),
 }
 
 
@@ -472,9 +469,7 @@ INDEX_DOCUMENT = {
 
 ERROR_DOCUMENT = {
     'name': 'error-document',
-    'help_text': (
-        'The object key name to use when ' 'a 4XX class error occurs.'
-    ),
+    'help_text': ('The object key name to use when a 4XX class error occurs.'),
 }
 
 
@@ -971,7 +966,7 @@ class CpCommand(S3TransferCommand):
         "Copies a local file or S3 object to another location "
         "locally or in S3."
     )
-    USAGE = "<LocalPath> <S3Uri> or <S3Uri> <LocalPath> " "or <S3Uri> <S3Uri>"
+    USAGE = "<LocalPath> <S3Uri> or <S3Uri> <LocalPath> or <S3Uri> <S3Uri>"
     ARG_TABLE = (
         [
             {
@@ -989,7 +984,7 @@ class CpCommand(S3TransferCommand):
 class MvCommand(S3TransferCommand):
     NAME = 'mv'
     DESCRIPTION = BasicCommand.FROM_FILE('s3', 'mv', '_description.rst')
-    USAGE = "<LocalPath> <S3Uri> or <S3Uri> <LocalPath> " "or <S3Uri> <S3Uri>"
+    USAGE = "<LocalPath> <S3Uri> or <S3Uri> <LocalPath> or <S3Uri> <S3Uri>"
     ARG_TABLE = (
         [
             {
@@ -1034,7 +1029,7 @@ class SyncCommand(S3TransferCommand):
         "the destination. Only creates folders in the destination "
         "if they contain one or more files."
     )
-    USAGE = "<LocalPath> <S3Uri> or <S3Uri> " "<LocalPath> or <S3Uri> <S3Uri>"
+    USAGE = "<LocalPath> <S3Uri> or <S3Uri> <LocalPath> or <S3Uri> <S3Uri>"
     ARG_TABLE = (
         [
             {

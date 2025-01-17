@@ -80,7 +80,7 @@ class TestGetObject(BaseAWSCommandParamsTest):
         self.assertEqual(stdout, '')
         with open(filename) as f:
             contents = f.read()
-            self.assertEqual(contents, ('a,b,c,d\n' 'e,f,g,h\n'))
+            self.assertEqual(contents, ('a,b,c,d\ne,f,g,h\n'))
 
     def test_errors_are_propagated(self):
         self.http_response.status_code = 400
@@ -133,7 +133,7 @@ class TestHelpOutput(BaseAWSHelpOutputTest):
         # We don't want to be super picky because the wording may change
         # We just want to verify the Output section was customized.
         self.assert_contains(
-            'Output\n======\n' 'This command generates no output'
+            'Output\n======\nThis command generates no output'
         )
         self.assert_not_contains('[outfile')
         self.assert_contains('outfile')

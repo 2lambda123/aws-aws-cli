@@ -27,7 +27,7 @@ ERROR_MESSAGE = (
     'session-manager-plugin-not-found',
 )
 
-TASK_NOT_FOUND = 'The task provided in the request was ' 'not found.'
+TASK_NOT_FOUND = 'The task provided in the request was not found.'
 
 
 class ECSExecuteCommand(ServiceOperation):

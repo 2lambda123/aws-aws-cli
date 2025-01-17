@@ -95,7 +95,7 @@ class Deregister(BasicCommand):
         start = params.iam_user_arn.rfind('/') + 1
         params.user_name = params.iam_user_arn[start:]
         params.tags = response['instanceInfo']['tags']
-        sys.stdout.write('DONE\n' f'IamUserArn: {params.iam_user_arn}\n')
+        sys.stdout.write(f'DONE\nIamUserArn: {params.iam_user_arn}\n')
         if params.tags:
             sys.stdout.write('Tags:')
             for tag in params.tags:

@@ -44,7 +44,7 @@ class TestKubeconfigWriter(unittest.TestCase):
 
         with open(file_to_write) as stream:
             self.assertMultiLineEqual(
-                stream.read(), "current-context: context\n" "apiVersion: v1\n"
+                stream.read(), "current-context: context\napiVersion: v1\n"
             )
 
     def test_write_makedirs(self):
@@ -60,7 +60,7 @@ class TestKubeconfigWriter(unittest.TestCase):
 
         with open(config_path) as stream:
             self.assertMultiLineEqual(
-                stream.read(), "current-context: context\n" "apiVersion: v1\n"
+                stream.read(), "current-context: context\napiVersion: v1\n"
             )
 
     def test_write_directory(self):

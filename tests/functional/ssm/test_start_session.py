@@ -99,7 +99,7 @@ class TestSessionManager(BaseAWSCommandParamsTest):
         self, mock_check_output, mock_check_call
     ):
         cmdline = (
-            "ssm start-session --target instance-id " "--profile user_profile"
+            "ssm start-session --target instance-id --profile user_profile"
         )
         mock_check_call.return_value = 0
         mock_check_output.return_value = "1.2.500.0\n"
@@ -278,7 +278,7 @@ class TestSessionManager(BaseAWSCommandParamsTest):
 
     def test_start_session_with_user_profile_not_exist(self):
         cmdline = (
-            "ssm start-session --target instance-id " "--profile user_profile"
+            "ssm start-session --target instance-id --profile user_profile"
         )
         with temporary_file('w') as f:
             f.write(

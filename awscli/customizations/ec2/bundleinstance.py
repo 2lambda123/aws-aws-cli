@@ -35,7 +35,7 @@ BUCKET_DOCS = (
 
 # --prefix:
 PREFIX_DOCS = (
-    'The prefix for the image component names being stored ' 'in Amazon S3.'
+    'The prefix for the image component names being stored in Amazon S3.'
 )
 
 # --owner-akid

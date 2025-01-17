@@ -79,7 +79,7 @@ class TestCodeCommitCredentialHelper(unittest.TestCase):
     )
 
     NON_AWS_PROTOCOL_HOST_PATH = (
-        'protocol=https\n' 'host=mydomain.com\n' 'path=/v1/repos/myrepo'
+        'protocol=https\nhost=mydomain.com\npath=/v1/repos/myrepo'
     )
 
     MOCK_STDOUT_CLASS = StringIOWithFileNo

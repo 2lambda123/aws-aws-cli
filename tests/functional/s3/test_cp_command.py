@@ -294,7 +294,7 @@ class TestCPCommand(BaseCPCommandTest):
             {"ContentLength": "100", "LastModified": "00:00:00Z"},
             {'ETag': '"foo-1"'},
         ]
-        cmdline = '%s %s s3://bucket/key2.txt' ' --metadata KeyName=Value' % (
+        cmdline = '%s %s s3://bucket/key2.txt --metadata KeyName=Value' % (
             self.prefix,
             full_path,
         )
@@ -315,7 +315,7 @@ class TestCPCommand(BaseCPCommandTest):
             {'ETag': '"foo-2"'},
             {},
         ]
-        cmdline = '%s %s s3://bucket/key2.txt' ' --metadata KeyName=Value' % (
+        cmdline = '%s %s s3://bucket/key2.txt --metadata KeyName=Value' % (
             self.prefix,
             full_path,
         )
@@ -851,9 +851,9 @@ class TestCPCommand(BaseCPCommandTest):
             {'ETag': 'foo-e2', 'ChecksumCRC32': 'foo-2'},
             {},
         ]
-        cmdline = (
-            '%s %s s3://bucket/key2.txt'
-            ' --checksum-algorithm CRC32' % (self.prefix, full_path)
+        cmdline = '%s %s s3://bucket/key2.txt --checksum-algorithm CRC32' % (
+            self.prefix,
+            full_path,
         )
         self.run_cmd(cmdline, expected_rc=0)
         self.assertEqual(

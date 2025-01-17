@@ -110,7 +110,7 @@ class TestAddSteps(BaseAWSCommandParamsTest):
             'latest',
             '--args',
             '-f',
-            's3://elasticmapreduce/samples/' 'pig-apache/do-reports2.pig',
+            's3://elasticmapreduce/samples/pig-apache/do-reports2.pig',
         ],
     }
 
@@ -121,7 +121,7 @@ class TestAddSteps(BaseAWSCommandParamsTest):
             '--run-pig-script',
             '--args',
             '-f',
-            's3://elasticmapreduce/samples/' 'pig-apache/do-reports2.pig',
+            's3://elasticmapreduce/samples/pig-apache/do-reports2.pig',
         ],
     }
 
@@ -584,7 +584,7 @@ class TestAddSteps(BaseAWSCommandParamsTest):
     def test_empty_step_args(self):
         cmd = self.prefix + 'Type=Streaming,Args='
         expected_error_msg = (
-            '\naws: error: The prameter Args cannot ' 'be an empty list.\n'
+            '\naws: error: The prameter Args cannot be an empty list.\n'
         )
         self.assert_error_for_ami_and_release_based_clusters(
             cmd=cmd,
@@ -767,7 +767,7 @@ class TestAddSteps(BaseAWSCommandParamsTest):
         }
         self.assert_params_for_cmd(cmd, expected_result)
 
-    @mock.patch('awscli.customizations.emr.' 'emrutils.get_release_label')
+    @mock.patch('awscli.customizations.emr.emrutils.get_release_label')
     def assert_params_for_ami_and_release_based_clusters(
         self, grl_patch, cmd, expected_result, expected_result_release
     ):
@@ -778,7 +778,7 @@ class TestAddSteps(BaseAWSCommandParamsTest):
             grl_patch.return_value = 'emr-4.0'
             self.assert_params_for_cmd(cmd, expected_result_release)
 
-    @mock.patch('awscli.customizations.emr.' 'emrutils.get_release_label')
+    @mock.patch('awscli.customizations.emr.emrutils.get_release_label')
     def assert_error_for_ami_and_release_based_clusters(
         self, grl_patch, cmd, expected_error_msg, expected_result_release
     ):

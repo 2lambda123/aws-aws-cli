@@ -259,7 +259,7 @@ PIG_DEFAULT_STEP = {
             '--run-pig-script',
             '--args',
             '-f',
-            's3://elasticmapreduce/samples/' 'pig-apache/do-reports2.pig',
+            's3://elasticmapreduce/samples/pig-apache/do-reports2.pig',
         ],
     },
 }
@@ -274,7 +274,7 @@ PIG_STEP = {
             '--run-pig-script',
             '--args',
             '-f',
-            's3://elasticmapreduce/samples/' 'pig-apache/do-reports2.pig',
+            's3://elasticmapreduce/samples/pig-apache/do-reports2.pig',
         ],
     },
 }
@@ -586,7 +586,7 @@ class TestCreateCluster(BaseAWSCommandParamsTest):
         self.assert_params_for_cmd(cmd, result)
 
         cmd = DEFAULT_CMD + (
-            '--log-uri s3://test/logs --enable-debugging ' '--region us-west-2'
+            '--log-uri s3://test/logs --enable-debugging --region us-west-2'
         )
         debugging_config = [
             {
@@ -693,8 +693,7 @@ class TestCreateCluster(BaseAWSCommandParamsTest):
 
     def test_instance_groups_missing_required_parameter_error(self):
         cmd = (
-            'emr create-cluster --use-default-roles --release-label'
-            ' emr-4.0.0 '
+            'emr create-cluster --use-default-roles --release-label emr-4.0.0 '
         )
         expect_error_msg = (
             '\naws: error: Must specify either --instance-groups or '

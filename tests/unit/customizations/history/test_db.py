@@ -598,7 +598,7 @@ class TestDatabaseRecordReader(BaseDatabaseRecordTester):
 
     def test_iter_records_performs_correct_query(self):
         expected_query = (
-            'SELECT * from records where id = ? ' 'ORDER BY timestamp'
+            'SELECT * from records where id = ? ORDER BY timestamp'
         )
         [_ for _ in self.reader.iter_records('fake_id')]
         self.assertEqual(

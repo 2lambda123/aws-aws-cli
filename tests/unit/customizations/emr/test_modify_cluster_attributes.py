@@ -105,9 +105,7 @@ class TestModifyClusterAttributes(BaseAWSCommandParamsTest):
         self.assertEqual(expected_error_msg, result[1])
 
     def test_auto_terminate_and_no_auto_terminate(self):
-        args = (
-            ' --cluster-id j-ABC123456 --auto-terminate' ' --no-auto-terminate'
-        )
+        args = ' --cluster-id j-ABC123456 --auto-terminate --no-auto-terminate'
         cmdline = self.prefix + args
         expected_error_msg = (
             '\naws: error: You cannot specify both --auto-terminate '

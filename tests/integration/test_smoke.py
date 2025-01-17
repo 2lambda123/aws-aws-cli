@@ -152,6 +152,6 @@ def test_display_error_message(cmd):
     assert result.rc == 255
 
     match = ERROR_MESSAGE_RE.search(result.stderr)
-    assert (
-        match is not None
-    ), f'Error message was not displayed for command "{command_string}": {result.stderr}'
+    assert match is not None, (
+        f'Error message was not displayed for command "{command_string}": {result.stderr}'
+    )

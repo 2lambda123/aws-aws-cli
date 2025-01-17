@@ -90,7 +90,7 @@ class TestListObjects(BaseAWSCommandParamsTest):
 
     def test_pagination_params_cannot_be_supplied_with_no_paginate(self):
         cmdline = (
-            self.prefix + ' --bucket mybucket --no-paginate ' '--max-items 100'
+            self.prefix + ' --bucket mybucket --no-paginate --max-items 100'
         )
         self.assert_params_for_cmd(
             cmdline,

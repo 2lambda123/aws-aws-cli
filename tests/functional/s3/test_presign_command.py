@@ -35,15 +35,13 @@ class TestPresignCommand(BaseAWSCommandParamsTest):
     prefix = 's3 presign '
 
     def enable_addressing_mode_in_config(self, fileobj, mode):
-        fileobj.write(
-            "[default]\n" "s3 =\n" "    addressing_style = %s\n" % mode
-        )
+        fileobj.write("[default]\ns3 =\n    addressing_style = %s\n" % mode)
         fileobj.flush()
         self.environ['AWS_CONFIG_FILE'] = fileobj.name
         self.driver = create_clidriver()
 
     def enable_sigv4_from_config_file(self, fileobj):
-        fileobj.write("[default]\n" "s3 =\n" "    signature_version = s3v4\n")
+        fileobj.write("[default]\ns3 =\n    signature_version = s3v4\n")
         fileobj.flush()
         self.environ['AWS_CONFIG_FILE'] = fileobj.name
         self.driver = create_clidriver()
@@ -145,7 +143,7 @@ class TestPresignCommand(BaseAWSCommandParamsTest):
             'query_params': {
                 'X-Amz-Algorithm': 'AWS4-HMAC-SHA256',
                 'X-Amz-Credential': (
-                    'access_key%2F20160818%2Fus-east-1' '%2Fs3%2Faws4_request'
+                    'access_key%2F20160818%2Fus-east-1%2Fs3%2Faws4_request'
                 ),
                 'X-Amz-Date': '20160818T143303Z',
                 'X-Amz-Expires': '3600',
